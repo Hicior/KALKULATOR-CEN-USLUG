@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulator Cen Usług</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <main>
+        <div id="main-panel">
+          <h2>Wybierz rodzaj księgowości:</h2>
+          <div class="accounting-types">
+            <button id="kpir-button" class="big-button">KPiR</button>
+            <button id="kh-button" class="big-button">KH</button>
+          </div>
+        </div>
+
+        <div id="kpir-panel" class="options-panel hidden">
+          <h2>Opcje dla KPiR</h2>
+          <div class="form-group">
+            <label for="kpir-docs">Liczba dokumentów:</label>
+            <select id="kpir-docs" class="form-control">
+              <option value="0-10">0-10</option>
+              <option value="11-30">11-30</option>
+              <option value="31-50">31-50</option>
+              <option value="51-70">51-70</option>
+              <option value="71-90">71-90</option>
+              <option value="91-110">91-110</option>
+              <option value="111-130">111-130</option>
+              <option value="131-150">131-150</option>
+              <option value="151-170">151-170</option>
+              <option value="171-190">171-190</option>
+              <option value="191-210">191-210</option>
+              <option value="211-230">211-230</option>
+              <option value="231-250">231-250</option>
+              <option value="251-270">251-270</option>
+              <option value="271-290">271-290</option>
+              <option value="291-310">291-310</option>
+              <option value="311-330">311-330</option>
+              <option value="331-350">331-350</option>
+              <option value="351-370">351-370</option>
+              <option value="371-390">371-390</option>
+              <option value="391-410">391-410</option>
+              <option value="411-430">411-430</option>
+              <option value="431-450">431-450</option>
+              <option value="451-470">451-470</option>
+              <option value="471-490">471-490</option>
+              <option value="491-500">491-500</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="kpir-vat-margin">VAT Marża:</label>
+            <div class="radio-group">
+              <label
+                ><input
+                  type="radio"
+                  name="kpir-vat-margin"
+                  value="nie"
+                  checked />
+                NIE</label
+              >
+              <label
+                ><input type="radio" name="kpir-vat-margin" value="tak" />
+                TAK</label
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="kpir-vat-proportion">Proporcja VAT:</label>
+            <div class="radio-group">
+              <label
+                ><input
+                  type="radio"
+                  name="kpir-vat-proportion"
+                  value="nie"
+                  checked />
+                NIE</label
+              >
+              <label
+                ><input type="radio" name="kpir-vat-proportion" value="tak" />
+                TAK</label
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="kpir-internet-payments">Płatności Internetowe:</label>
+            <div class="radio-group">
+              <label
+                ><input
+                  type="radio"
+                  name="kpir-internet-payments"
+                  value="nie"
+                  checked />
+                NIE</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="kpir-internet-payments"
+                  value="tak" />
+                TAK</label
+              >
+            </div>
+          </div>
+          <div id="kpir-internet-payments-count" class="form-group hidden">
+            <label for="kpir-payments-count">Liczba płatności:</label>
+            <select id="kpir-payments-count" class="form-control">
+              <option value="1-5">1-5</option>
+              <option value="6-10">6-10</option>
+              <option value="11-15">11-15</option>
+              <option value="16-20">16-20</option>
+              <option value="21-25">21-25</option>
+              <option value="26-30">26-30</option>
+              <option value="31-35">31-35</option>
+              <option value="36-40">36-40</option>
+              <option value="41-45">41-45</option>
+              <option value="46-50">46-50</option>
+              <option value="51-55">51-55</option>
+              <option value="56-60">56-60</option>
+              <option value="61-65">61-65</option>
+              <option value="66-70">66-70</option>
+              <option value="71-75">71-75</option>
+              <option value="76-80">76-80</option>
+              <option value="81-85">81-85</option>
+              <option value="86-90">86-90</option>
+              <option value="91-95">91-95</option>
+              <option value="96-100">96-100</option>
+            </select>
+          </div>
+          <div class="button-group">
+            <button id="back-from-kpir" class="back-button">Powrót</button>
+            <button id="kpir-calculate" class="calculate-button">Oblicz</button>
+          </div>
+        </div>
+
+        <div id="kh-panel" class="options-panel hidden">
+          <h2>Opcje dla KH</h2>
+          <div class="form-group">
+            <label for="kh-docs">Liczba dokumentów:</label>
+            <select id="kh-docs" class="form-control">
+              <option value="0-20">0-20</option>
+              <option value="21-40">21-40</option>
+              <option value="41-60">41-60</option>
+              <option value="61-80">61-80</option>
+              <option value="81-100">81-100</option>
+              <option value="101-120">101-120</option>
+              <option value="121-140">121-140</option>
+              <option value="141-160">141-160</option>
+              <option value="161-180">161-180</option>
+              <option value="181-200">181-200</option>
+              <option value="201-220">201-220</option>
+              <option value="221-240">221-240</option>
+              <option value="241-260">241-260</option>
+              <option value="261-280">261-280</option>
+              <option value="281-300">281-300</option>
+              <option value="301-320">301-320</option>
+              <option value="321-340">321-340</option>
+              <option value="341-360">341-360</option>
+              <option value="361-380">361-380</option>
+              <option value="381-400">381-400</option>
+              <option value="401-420">401-420</option>
+              <option value="421-440">421-440</option>
+              <option value="441-460">441-460</option>
+              <option value="461-480">461-480</option>
+              <option value="481-500">481-500</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="kh-production">Produkcja/Budowlanka:</label>
+            <div class="radio-group">
+              <label
+                ><input type="radio" name="kh-production" value="nie" checked />
+                NIE</label
+              >
+              <label
+                ><input type="radio" name="kh-production" value="tak" />
+                TAK</label
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="kh-cit">CIT Estoński:</label>
+            <div class="radio-group">
+              <label
+                ><input type="radio" name="kh-cit" value="nie" checked />
+                NIE</label
+              >
+              <label
+                ><input type="radio" name="kh-cit" value="tak" /> TAK</label
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="kh-vat-margin">VAT Marża:</label>
+            <div class="radio-group">
+              <label
+                ><input type="radio" name="kh-vat-margin" value="nie" checked />
+                NIE</label
+              >
+              <label
+                ><input type="radio" name="kh-vat-margin" value="tak" />
+                TAK</label
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="kh-vat-proportion">Proporcja VAT:</label>
+            <div class="radio-group">
+              <label
+                ><input
+                  type="radio"
+                  name="kh-vat-proportion"
+                  value="nie"
+                  checked />
+                NIE</label
+              >
+              <label
+                ><input type="radio" name="kh-vat-proportion" value="tak" />
+                TAK</label
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="kh-internet-payments">Płatności Internetowe:</label>
+            <div class="radio-group">
+              <label
+                ><input
+                  type="radio"
+                  name="kh-internet-payments"
+                  value="nie"
+                  checked />
+                NIE</label
+              >
+              <label
+                ><input type="radio" name="kh-internet-payments" value="tak" />
+                TAK</label
+              >
+            </div>
+          </div>
+          <div id="kh-internet-payments-count" class="form-group hidden">
+            <label for="kh-payments-count">Liczba płatności:</label>
+            <select id="kh-payments-count" class="form-control">
+              <option value="1-5">1-5</option>
+              <option value="6-10">6-10</option>
+              <option value="11-15">11-15</option>
+              <option value="16-20">16-20</option>
+              <option value="21-25">21-25</option>
+              <option value="26-30">26-30</option>
+              <option value="31-35">31-35</option>
+              <option value="36-40">36-40</option>
+              <option value="41-45">41-45</option>
+              <option value="46-50">46-50</option>
+              <option value="51-55">51-55</option>
+              <option value="56-60">56-60</option>
+              <option value="61-65">61-65</option>
+              <option value="66-70">66-70</option>
+              <option value="71-75">71-75</option>
+              <option value="76-80">76-80</option>
+              <option value="81-85">81-85</option>
+              <option value="86-90">86-90</option>
+              <option value="91-95">91-95</option>
+              <option value="96-100">96-100</option>
+            </select>
+          </div>
+          <div class="button-group">
+            <button id="back-from-kh" class="back-button">Powrót</button>
+            <button class="calculate-button">Oblicz</button>
+          </div>
+        </div>
+
+        <div id="result-panel" class="options-panel hidden">
+          <h2>Wynik kalkulacji</h2>
+          <div class="result-container">
+            <div class="price-breakdown">
+              <p>
+                <strong>Rodzaj księgowości:</strong>
+                <span id="result-type"></span>
+              </p>
+              <p>
+                <strong>Liczba dokumentów:</strong>
+                <span id="result-docs"></span>
+              </p>
+              <p>
+                <strong>Cena bazowa:</strong>
+                <span id="result-base-price"></span>
+              </p>
+              <div id="result-extras"></div>
+            </div>
+            <div class="final-price">
+              <h3>Cena końcowa:</h3>
+              <p id="final-price" class="price"></p>
+            </div>
+          </div>
+          <button id="calculate-again" class="calculate-button">
+            Oblicz ponownie
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
