@@ -1,18 +1,46 @@
-/* General styles */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+/* New OKLCH Color Scheme */
 :root {
-  --primary-color: #4a6fa5;
-  --secondary-color: #334e68;
-  --accent-color: #47bec7;
-  --light-color: #f8f9fa;
-  --dark-color: #343a40;
-  --success-color: #2ecc71;
-  --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease-in-out;
-  --gradient: linear-gradient(135deg, #6a8eae 0%, #334e68 100%);
-  --button-gradient: linear-gradient(135deg, #4a6fa5 0%, #334e68 100%);
-  --result-gradient: linear-gradient(135deg, #47bec7 0%, #4a6fa5 100%);
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(93% 0 0);
+  --color-base-300: oklch(86% 0 0);
+  --color-base-content: oklch(22.389% .031 278.072);
+  --color-primary: oklch(58% .158 241.966);
+  --color-primary-content: oklch(100% 0 0);
+  --color-secondary: oklch(55% .046 257.417);
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: oklch(60% .118 184.704);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(0% 0 0);
+  --color-neutral-content: oklch(100% 0 0);
+  --color-info: oklch(60% .126 221.723);
+  --color-info-content: oklch(100% 0 0);
+  --color-success: oklch(62% .194 149.214);
+  --color-success-content: oklch(100% 0 0);
+  --color-warning: oklch(85% .199 91.936);
+  --color-warning-content: oklch(0% 0 0);
+  --color-error: oklch(70% .191 22.216);
+  --color-error-content: oklch(0% 0 0);
+  --radius-selector: .25rem;
+  --radius-field: .25rem;
+  --radius-box: .25rem;
+  --size-selector: .25rem;
+  --size-field: .25rem;
+  --border: 1px;
+  
+  /* Additional design tokens */
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Reset and base styles */
 * {
   margin: 0;
   padding: 0;
@@ -20,335 +48,756 @@
 }
 
 body {
-  font-family: "Poppins", sans-serif;
-  line-height: 1.7;
-  color: var(--dark-color);
-  background-color: #eef2f7;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.6;
+  color: var(--color-base-content);
+  background: linear-gradient(135deg, var(--color-base-100) 0%, var(--color-base-200) 100%);
   min-height: 100vh;
-  background-image: linear-gradient(120deg, #f5f7fa 0%, #e4e8ee 100%);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Main container */
 .container {
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 30px;
-  min-height: 600px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  min-height: auto;
   display: flex;
   flex-direction: column;
-  background-color: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 2rem;
 }
 
+/* Typography */
 h2 {
-  color: var(--secondary-color);
-  font-size: 2rem;
-  margin-bottom: 20px;
-  text-align: center;
+  font-size: 1.75rem;
   font-weight: 600;
+  color: var(--color-base-content);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.015em;
 }
 
 h3 {
-  color: var(--secondary-color);
-  font-size: 1.6rem;
-  margin-bottom: 15px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
+h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-base-content);
+  margin-bottom: 0.5rem;
+}
+
+/* Main content area */
 main {
-  flex: 1;
+  width: 100%;
+  max-width: 900px;
+  background: var(--color-base-100);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  border: var(--border) solid var(--color-base-300);
+}
+
+/* Panel styles */
+.panel {
+  padding: 2rem;
+  min-height: auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
 }
 
-footer {
-  text-align: center;
-  margin-top: 40px;
-  padding: 20px 0;
-  border-top: 2px solid var(--primary-color);
-  color: var(--primary-color);
-}
-
-/* Main Panel */
-.accounting-types {
-  display: flex;
-  justify-content: center;
-  gap: 50px;
-  margin-top: 40px;
-}
-
-.big-button {
-  padding: 25px 50px;
-  font-size: 1.5rem;
-  font-weight: 600;
-  background-image: var(--button-gradient);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: var(--transition);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.big-button:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
-  filter: brightness(1.1);
-}
-
-/* Option Panels */
-.options-panel {
-  background-color: var(--light-color);
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e4e8ee;
-  max-width: 1000px;
-  width: 100%;
-  margin: 20px auto;
-}
-
-/* Specific styling for KH panel */
-#kh-panel:not(.hidden) {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Create 2 equal columns */
-  gap: 10px 30px; /* Row gap and column gap */
-  align-items: start; /* Align items to the start of the grid cell */
-}
-
-/* Apply same grid layout to KPIR panel */
-#kpir-panel:not(.hidden) {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Create 2 equal columns */
-  gap: 10px 30px; /* Row gap and column gap */
-  align-items: start; /* Align items to the start of the grid cell */
-}
-
-/* Common styling for both panels' headers */
-#kh-panel h2,
-#kpir-panel h2 {
-  grid-column: 1 / -1; /* Make header span both columns */
-  margin-bottom: 10px; /* Adjust margin */
-}
-
-/* Common styling for button groups */
-#kh-panel .button-group,
-#kpir-panel .button-group {
-  grid-column: 1 / -1; /* Make button group span both columns */
-  margin-top: 10px; /* Adjust margin */
-  text-align: right; /* Align buttons to the right */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-/* Make buttons full width in their columns */
-.button-group .calculate-button,
-.button-group .back-button,
-#kpir-panel .calculate-button,
-#kpir-panel .back-button {
-  margin-right: 0;
-  width: 100%;
+/* Compact result panel */
+#result-panel {
+  padding: 1.5rem;
 }
 
 .hidden {
   display: none;
 }
 
-.form-group {
-  margin-bottom: 25px;
+/* Main panel - accounting type selection */
+.accounting-types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.accounting-card {
+  background: var(--color-base-100);
+  border: 2px solid var(--color-base-300);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
   position: relative;
+  overflow: hidden;
+}
+
+.accounting-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  transform: scaleX(0);
+  transition: var(--transition);
+}
+
+.accounting-card:hover::before {
+  transform: scaleX(1);
+}
+
+.accounting-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.accounting-card.selected {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.accounting-card h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: inherit;
+  text-align: center;
+}
+
+.accounting-card p {
+  font-size: 1rem;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+/* Form styles */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
 }
 
 label {
   display: block;
-  margin-bottom: 10px;
   font-weight: 600;
-  color: var(--secondary-color);
-  font-size: 1.1rem;
+  color: var(--color-base-content);
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
 }
 
 .form-control {
   width: 100%;
-  padding: 15px;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
+  padding: 1rem;
+  border: var(--border) solid var(--color-base-300);
+  border-radius: var(--radius-field);
   font-size: 1rem;
-  transition: var(--transition);
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  background: var(--color-base-100);
+  transition: var(--transition-fast);
+  font-family: inherit;
 }
 
 .form-control:focus {
-  border-color: var(--accent-color);
   outline: none;
-  box-shadow: 0 0 0 4px rgba(71, 190, 199, 0.2);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
+/* Radio group styles */
 .radio-group {
   display: flex;
-  gap: 30px;
-  align-items: center;
-  background-color: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid #ced4da;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  gap: 1.5rem;
+  padding: 1rem;
+  background: var(--color-base-200);
+  border-radius: var(--radius-field);
+  border: var(--border) solid var(--color-base-300);
 }
 
-.radio-group label {
+.radio-group.vertical {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.radio-group.horizontal {
+  flex-direction: row;
+  justify-content: center;
+}
+
+.radio-option {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   cursor: pointer;
   font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
   margin-bottom: 0;
-  color: var(--dark-color);
-  font-size: 1rem;
+  border-radius: var(--radius-selector);
+  transition: var(--transition-fast);
 }
 
-.radio-group input[type="radio"] {
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--secondary-color);
+.radio-option:hover {
+  background: var(--color-base-100);
+}
+
+.radio-option input[type="radio"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--color-base-300);
   border-radius: 50%;
-  margin-right: 5px;
+  appearance: none;
+  margin: 0;
   cursor: pointer;
   position: relative;
-  top: -1px;
-  transition: all 0.2s ease-in-out;
+  transition: var(--transition-fast);
 }
 
-.radio-group input[type="radio"]:checked {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+.radio-option input[type="radio"]:checked {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
 }
 
-.radio-group input[type="radio"]:checked::after {
-  content: "";
-  display: block;
-  width: 8px;
-  height: 8px;
-  background-color: white;
-  border-radius: 50%;
+.radio-option input[type="radio"]:checked::after {
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: var(--color-primary-content);
+  border-radius: 50%;
   transform: translate(-50%, -50%);
 }
 
-.back-button,
-.calculate-button {
-  padding: 14px 28px;
-  font-size: 1.1rem;
+.radio-option label {
+  margin: 0;
+  cursor: pointer;
+  flex: 1;
+}
+
+/* Partners input */
+.partners-input {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--color-info);
+  color: var(--color-info-content);
+  border-radius: var(--radius-field);
+  border: var(--border) solid var(--color-info);
+}
+
+.partners-input label {
+  color: var(--color-info-content);
+  margin-bottom: 0.5rem;
+}
+
+.partners-input .form-control {
+  background: var(--color-info-content);
+  color: var(--color-base-content);
+}
+
+/* Info message */
+.info-message {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--color-warning);
+  color: var(--color-warning-content);
+  border-radius: var(--radius-field);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  border: var(--border) solid var(--color-warning);
+}
+
+/* Procedures grid */
+.procedures-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.procedure-item {
+  background: var(--color-base-200);
+  border: var(--border) solid var(--color-base-300);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  transition: var(--transition);
+}
+
+.procedure-item:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.procedure-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.procedure-description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-secondary);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.info-icon {
+  font-size: 1.2rem;
+  color: var(--color-info);
+  cursor: help;
+  margin-left: 0.5rem;
+}
+
+/* Activities grid */
+.activities-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.activity-item {
+  background: var(--color-base-200);
+  border: var(--border) solid var(--color-base-300);
+  border-radius: var(--radius-field);
+  padding: 1rem;
+  transition: var(--transition);
+}
+
+.activity-item:hover {
+  border-color: var(--color-primary);
+  background: var(--color-base-100);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--color-base-300);
+  border-radius: var(--radius-selector);
+  appearance: none;
+  margin: 0;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition-fast);
+  background: var(--color-base-100);
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: var(--color-primary-content);
+  font-size: 0.75rem;
+  font-weight: bold;
+  transform: translate(-50%, -50%);
+}
+
+.checkmark {
+  /* This span is not needed since we're using ::after pseudo-element */
+  display: none;
+}
+
+/* Button styles */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: var(--border) solid var(--color-base-300);
+}
+
+.btn {
+  padding: 0.875rem 2rem;
+  border-radius: var(--radius-field);
   font-weight: 600;
-  color: white;
+  font-size: 1rem;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
   transition: var(--transition);
-  margin-top: 25px;
-  display: inline-block;
-  margin-right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-family: inherit;
+  letter-spacing: 0.01em;
 }
 
-.back-button {
-  background-color: var(--secondary-color);
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-primary-content);
 }
 
-.calculate-button {
-  background-image: var(--button-gradient);
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
-.back-button:hover,
-.calculate-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  filter: brightness(1.1);
+.btn-secondary {
+  background: var(--color-base-300);
+  color: var(--color-base-content);
 }
 
-/* Result Panel */
-.result-container {
+.btn-secondary:hover {
+  background: var(--color-secondary);
+  color: var(--color-secondary-content);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-large {
+  padding: 1.25rem 3rem;
+  font-size: 1.125rem;
+  margin: 0 auto;
+  min-width: 200px;
+}
+
+/* Result panel */
+.result-summary {
+  text-align: center;
+  margin-bottom: 1rem;
+  padding: 1.25rem;
+  background: var(--color-base-200);
+  border-radius: var(--radius-lg);
+  border: var(--border) solid var(--color-base-300);
+}
+
+.price-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.price-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.price-amount {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.result-details {
+  background: var(--color-base-100);
+  border: var(--border) solid var(--color-base-300);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.result-details h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-base-content);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.375rem;
+  border-bottom: var(--border) solid var(--color-base-300);
+  text-align: left;
+}
+
+.details-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 30px;
-  margin-bottom: 30px;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
 }
 
-@media (min-width: 768px) {
-  .result-container {
-    grid-template-columns: 1fr 1fr;
+@media (max-width: 600px) {
+  .details-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-/* Center and enlarge the calculate-again button */
-#calculate-again {
-  display: block;
-  margin: 30px auto;
-  padding: 18px 36px;
-  font-size: 1.25rem;
-  width: auto;
-  min-width: 250px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-base-200);
+  border-radius: var(--radius-field);
+  border: var(--border) solid var(--color-base-300);
 }
 
-.price-breakdown {
-  background-color: #f8f9fa;
-  padding: 25px;
-  border-radius: 12px;
-  border-left: 5px solid var(--accent-color);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.detail-label {
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
-.price-breakdown p {
-  margin-bottom: 12px;
-  font-size: 1.1rem;
-  color: var(--dark-color);
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+.detail-value {
+  font-weight: 600;
+  font-size: 0.875rem;
 }
 
-.price-breakdown p:last-child {
-  border-bottom: none;
-}
-
-.price-breakdown strong {
-  color: var(--secondary-color);
-  min-width: 180px;
-  display: inline-block;
-}
-
-.final-price {
-  text-align: center;
-  padding: 30px;
-  background-image: var(--result-gradient);
-  color: white;
-  border-radius: 12px;
+.extras-section {
+  margin-top: 0.75rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  gap: 0.5rem;
 }
 
-.final-price h3 {
-  color: white;
-  font-weight: 600;
-  margin-bottom: 15px;
-  font-size: 1.4rem;
+.extras-section .detail-item {
+  background: var(--color-accent);
+  color: var(--color-accent-content);
+  border-color: var(--color-accent);
 }
 
-.price {
-  font-size: 3rem;
+.extras-section .detail-label {
+  color: var(--color-accent-content);
+}
+
+.extras-section .detail-value {
+  color: var(--color-accent-content);
   font-weight: 700;
-  color: white;
-  letter-spacing: 1px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Add Google Font link */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem;
+    padding-top: 1rem;
+  }
+  
+  main {
+    margin: 0;
+    max-width: 100%;
+  }
+  
+  .panel {
+    padding: 1.5rem 1rem;
+  }
+  
+  #result-panel {
+    padding: 1rem 0.75rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  .accounting-types {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .activities-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .details-grid {
+    gap: 0.5rem;
+  }
+  
+  .button-group {
+    flex-direction: column-reverse;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .radio-group.horizontal {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .price-amount {
+    font-size: 2rem;
+  }
+  
+  .procedure-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .accounting-card {
+    padding: 1.5rem;
+  }
+  
+  .panel {
+    padding: 1.5rem 1rem;
+  }
+  
+  #result-panel {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .price-amount {
+    font-size: 1.75rem;
+  }
+  
+  .result-summary {
+    padding: 1rem;
+  }
+  
+  .result-details {
+    padding: 0.75rem;
+  }
+  
+  .procedure-item {
+    padding: 1rem;
+  }
+  
+  .radio-group.horizontal {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Focus styles for accessibility */
+.btn:focus,
+.form-control:focus,
+.accounting-card:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Loading state */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Payroll-specific styles */
+.payroll-input-group {
+  margin-bottom: 1rem;
+}
+
+.payroll-input-group label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--color-base-content);
+}
+
+.payroll-input-group .form-control {
+  max-width: 200px;
+}
+
+/* Services sections */
+.services-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.service-section {
+  background: var(--color-base-200);
+  border: var(--border) solid var(--color-base-300);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+.service-section h3 {
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+}
+
+.service-total {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: var(--border) solid var(--color-base-300);
+}
+
+.service-total .detail-item {
+  background: var(--color-primary);
+  color: var(--color-primary-content);
+  padding: 1rem;
+  border-radius: var(--radius-field);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .payroll-input-group .form-control {
+    max-width: 100%;
+  }
+  
+  .services-sections {
+    gap: 1.5rem;
+  }
+  
+  .service-section {
+    padding: 1rem;
+  }
+}

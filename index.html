@@ -8,294 +8,726 @@
   </head>
   <body>
     <div class="container">
-      <main>
-        <div id="main-panel">
-          <h2>Wybierz rodzaj księgowości:</h2>
+      <main class="fade-in">
+        <!-- Main Panel -->
+        <div id="main-panel" class="panel">
+          <h2>Wybierz rodzaj księgowości</h2>
           <div class="accounting-types">
-            <button id="kpir-button" class="big-button">KPiR</button>
-            <button id="kh-button" class="big-button">KH</button>
+            <div id="kpir-button" class="accounting-card" tabindex="0">
+              <h3>KPiR/Ryczałt</h3>
+              <p>Księga Przychodów i Rozchodów</p>
+            </div>
+            <div id="kh-button" class="accounting-card" tabindex="0">
+              <h3>KH</h3>
+              <p>Księgi Handlowe</p>
+            </div>
           </div>
         </div>
 
-        <div id="kpir-panel" class="options-panel hidden">
-          <h2>Opcje dla KPiR</h2>
-          <div class="form-group">
-            <label for="kpir-docs">Liczba dokumentów:</label>
+        <!-- KPIR Step 1: Business Form -->
+        <div id="kpir-form-panel" class="panel hidden">
+          <h2>KPiR - Forma prowadzonej działalności gospodarczej</h2>
+          
+          <div class="form-group full-width">
+            <div class="radio-group vertical">
+              <label class="radio-option">
+                <input type="radio" name="kpir-business-form" value="jednoosobowa" id="kpir-jednoosobowa" />
+                <span>Jednoosobowa działalność gospodarcza</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kpir-business-form" value="spolka-cywilna" id="kpir-spolka-cywilna" />
+                <span>Spółka Cywilna</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kpir-business-form" value="spolka-jawna" id="kpir-spolka-jawna" />
+                <span>Spółka Jawna</span>
+              </label>
+            </div>
+            
+            <div id="kpir-partners-input" class="partners-input hidden">
+              <label for="kpir-partners-count">Proszę wskazać liczbę wspólników</label>
+              <input type="number" id="kpir-partners-count" class="form-control" min="2" value="2" />
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="back-from-kpir-form" class="btn btn-secondary">Powrót</button>
+            <button id="kpir-form-next" class="btn btn-primary">Dalej</button>
+          </div>
+        </div>
+
+        <!-- KPIR Step 2: Document Count -->
+        <div id="kpir-docs-panel" class="panel hidden">
+          <h2>KPiR - Liczba dokumentów</h2>
+          
+          <div class="form-group full-width">
+            <label for="kpir-docs">Proszę wskazać miesięczną liczbę dokumentów</label>
             <select id="kpir-docs" class="form-control">
+              <option value="">Wybierz przedział</option>
               <option value="0-10">0-10</option>
-              <option value="11-30">11-30</option>
+              <option value="11-20">11-20</option>
+              <option value="21-30">21-30</option>
               <option value="31-50">31-50</option>
               <option value="51-70">51-70</option>
-              <option value="71-90">71-90</option>
-              <option value="91-110">91-110</option>
-              <option value="111-130">111-130</option>
-              <option value="131-150">131-150</option>
-              <option value="151-170">151-170</option>
-              <option value="171-190">171-190</option>
-              <option value="191-210">191-210</option>
-              <option value="211-230">211-230</option>
-              <option value="231-250">231-250</option>
-              <option value="251-270">251-270</option>
-              <option value="271-290">271-290</option>
-              <option value="291-310">291-310</option>
-              <option value="311-330">311-330</option>
-              <option value="331-350">331-350</option>
-              <option value="351-370">351-370</option>
-              <option value="371-390">371-390</option>
-              <option value="391-410">391-410</option>
-              <option value="411-430">411-430</option>
-              <option value="431-450">431-450</option>
-              <option value="451-470">451-470</option>
-              <option value="471-490">471-490</option>
-              <option value="491-500">491-500</option>
+              <option value="71-100">71-100</option>
+              <option value="101-130">101-130</option>
+              <option value="131-165">131-165</option>
+              <option value="166-200">166-200</option>
+              <option value="201-250">201-250</option>
+              <option value="251-300">251-300</option>
+              <option value="301-350">301-350</option>
+              <option value="351-400">351-400</option>
+              <option value="401-450">401-450</option>
+              <option value="451-500">451-500</option>
             </select>
-          </div>
-          <div class="form-group">
-            <label for="kpir-vat-margin">VAT Marża:</label>
-            <div class="radio-group">
-              <label
-                ><input
-                  type="radio"
-                  name="kpir-vat-margin"
-                  value="nie"
-                  checked />
-                NIE</label
-              >
-              <label
-                ><input type="radio" name="kpir-vat-margin" value="tak" />
-                TAK</label
-              >
+            
+            <div class="info-message">
+              <strong>Jako dokument traktuje się:</strong> fakturę zakupu/sprzedaży, notę odsetkową/obciążeniową, kompensatę, polisę, dowód wewnętrzny, polecenie księgowania (m.in. ZUS, różnice kursowe, lista płac, rachunek do umowy pracowniczej, amortyzacja, RMK), dokument magazynowy, każde 10 transakcji z wyciągu bankowego i/lub raportu kasowego (wyciąg bankowy z rachunku VAT liczony jako 1 jeden dokument bez względu na ilość transakcji).
             </div>
           </div>
-          <div class="form-group">
-            <label for="kpir-vat-proportion">Proporcja VAT:</label>
-            <div class="radio-group">
-              <label
-                ><input
-                  type="radio"
-                  name="kpir-vat-proportion"
-                  value="nie"
-                  checked />
-                NIE</label
-              >
-              <label
-                ><input type="radio" name="kpir-vat-proportion" value="tak" />
-                TAK</label
-              >
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="kpir-internet-payments">Płatności Internetowe:</label>
-            <div class="radio-group">
-              <label
-                ><input
-                  type="radio"
-                  name="kpir-internet-payments"
-                  value="nie"
-                  checked />
-                NIE</label
-              >
-              <label
-                ><input
-                  type="radio"
-                  name="kpir-internet-payments"
-                  value="tak" />
-                TAK</label
-              >
-            </div>
-          </div>
-          <div id="kpir-internet-payments-count" class="form-group hidden">
-            <label for="kpir-payments-count">Liczba płatności:</label>
-            <select id="kpir-payments-count" class="form-control">
-              <option value="1-5">1-5</option>
-              <option value="6-10">6-10</option>
-              <option value="11-15">11-15</option>
-              <option value="16-20">16-20</option>
-              <option value="21-25">21-25</option>
-              <option value="26-30">26-30</option>
-              <option value="31-35">31-35</option>
-              <option value="36-40">36-40</option>
-              <option value="41-45">41-45</option>
-              <option value="46-50">46-50</option>
-              <option value="51-55">51-55</option>
-              <option value="56-60">56-60</option>
-              <option value="61-65">61-65</option>
-              <option value="66-70">66-70</option>
-              <option value="71-75">71-75</option>
-              <option value="76-80">76-80</option>
-              <option value="81-85">81-85</option>
-              <option value="86-90">86-90</option>
-              <option value="91-95">91-95</option>
-              <option value="96-100">96-100</option>
-            </select>
-          </div>
+
           <div class="button-group">
-            <button id="back-from-kpir" class="back-button">Powrót</button>
-            <button id="kpir-calculate" class="calculate-button">Oblicz</button>
+            <button id="back-from-kpir-docs" class="btn btn-secondary">Powrót</button>
+            <button id="kpir-docs-next" class="btn btn-primary">Dalej</button>
           </div>
         </div>
 
-        <div id="kh-panel" class="options-panel hidden">
-          <h2>Opcje dla KH</h2>
-          <div class="form-group">
-            <label for="kh-docs">Liczba dokumentów:</label>
+        <!-- KPIR Step 3: Special Procedures -->
+        <div id="kpir-procedures-panel" class="panel hidden">
+          <h2>KPiR - Procedury szczególne</h2>
+          
+          <div class="procedures-grid">
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>I. Proporcja VAT</h4>
+              </div>
+              <div class="procedure-description">
+                Dotyczy sytuacji, gdy firma wykonuje zarówno czynności opodatkowane VAT, jak i zwolnione z VAT. W takim przypadku odliczenie podatku naliczonego następuje tylko w odpowiedniej proporcji – tzw. wskaźniku struktury sprzedaży. Ostateczna proporcja jest wyliczana na koniec roku i korygowana w deklaracji VAT.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kpir-vat-proportion" value="nie" id="kpir-vat-proportion-nie" checked />
+                  <span>NIE</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kpir-vat-proportion" value="tak" id="kpir-vat-proportion-tak" />
+                  <span>TAK</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>II. VAT OSS</h4>
+              </div>
+              <div class="procedure-description">
+                To uproszczony system rozliczania VAT przy sprzedaży towarów i usług konsumentom z innych krajów UE (np. w e-commerce). Dzięki OSS nie trzeba rejestrować się do VAT w każdym państwie, tylko rozlicza się całość przez polski urząd skarbowy.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kpir-vat-oss" value="nie" id="kpir-vat-oss-nie" checked />
+                  <span>NIE</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kpir-vat-oss" value="tak" id="kpir-vat-oss-tak" />
+                  <span>TAK</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>III. VAT marża</h4>
+              </div>
+              <div class="procedure-description">
+                Dotyczy m.in. sprzedaży używanych towarów, dzieł sztuki, antyków czy usług turystycznych. Podatek VAT płacony jest tylko od marży, czyli różnicy między ceną sprzedaży a ceną zakupu, a nie od całej wartości faktury.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kpir-vat-margin" value="nie" id="kpir-vat-margin-nie" checked />
+                  <span>NIE</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kpir-vat-margin" value="tak" id="kpir-vat-margin-tak" />
+                  <span>TAK</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>IV. Udostępnię faktury sprzedaży w formie pliku JPK_FA</h4>
+                <div class="info-icon" title="dotyczy klientów, którzy mają powyżej 10 faktur sprzedaży miesięcznie">ℹ️</div>
+              </div>
+              <div class="procedure-description">
+                Plik JPK_FA generuje się z programu księgowego lub systemu fakturowania – nie trzeba przesyłać każdej faktury osobno, wszystko jest w jednym zestawieniu. Chętnie wytłumaczymy Ci jak to zrobić, abyś uniknął dodatkowej opłaty za wprowadzanie ręczne dokumentów.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kpir-jpk-fa" value="tak" id="kpir-jpk-fa-tak" checked />
+                  <span>TAK</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kpir-jpk-fa" value="nie" id="kpir-jpk-fa-nie" />
+                  <span>NIE</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="back-from-kpir-procedures" class="btn btn-secondary">Powrót</button>
+            <button id="kpir-procedures-next" class="btn btn-primary">Dalej</button>
+          </div>
+        </div>
+
+        <!-- KPIR Step 4: Kadry -->
+        <div id="kpir-kadry-panel" class="panel hidden">
+          <h2>KPiR - Kadry</h2>
+          
+          <div class="form-group full-width">
+            <h4>Czy Państwa firma posiada pracowników, zleceniobiorców lub członków zarządu, którym wypłaca wynagrodzenie?</h4>
+            <div class="radio-group horizontal">
+              <label class="radio-option">
+                <input type="radio" name="kpir-has-employees" value="nie" id="kpir-has-employees-nie" />
+                <span>NIE</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kpir-has-employees" value="tak" id="kpir-has-employees-tak" />
+                <span>TAK</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="kpir-payroll-question" class="form-group full-width hidden">
+            <h4>Czy chcesz skorzystać również z usługi kadrowo-płacowej?</h4>
+            <div class="radio-group horizontal">
+              <label class="radio-option">
+                <input type="radio" name="kpir-wants-payroll" value="nie" id="kpir-wants-payroll-nie" />
+                <span>NIE</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kpir-wants-payroll" value="tak" id="kpir-wants-payroll-tak" />
+                <span>TAK</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="kpir-payroll-details" class="form-group full-width hidden">
+            <h4>Wskaż odpowiednio liczbę osób do rozliczenia:</h4>
+            
+            <div class="payroll-input-group">
+              <label for="kpir-employees-count">Liczba pracowników:</label>
+              <input type="number" id="kpir-employees-count" class="form-control" min="0" value="0" />
+            </div>
+
+            <div id="kpir-pfron-question" class="form-group hidden">
+              <h5>Czy zatrudnieni pracownicy posiadają orzeczenie o niepełnosprawności i pracodawca otrzymuje dofinansowanie z PFRON?</h5>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kpir-has-pfron" value="nie" id="kpir-has-pfron-nie" />
+                  <span>NIE</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kpir-has-pfron" value="tak" id="kpir-has-pfron-tak" />
+                  <span>TAK</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="kpir-pfron-count" class="payroll-input-group hidden">
+              <label for="kpir-pfron-employees">Wskaż liczbę pracowników objętych PFRON:</label>
+              <input type="number" id="kpir-pfron-employees" class="form-control" min="0" value="0" />
+            </div>
+
+            <div class="payroll-input-group">
+              <label for="kpir-contractors-count">Liczba zleceniobiorców:</label>
+              <input type="number" id="kpir-contractors-count" class="form-control" min="0" value="0" />
+            </div>
+
+            <div class="payroll-input-group">
+              <label for="kpir-board-count">Liczba członków zarządu z prawem do wynagrodzenia:</label>
+              <input type="number" id="kpir-board-count" class="form-control" min="0" value="0" />
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="back-from-kpir-kadry" class="btn btn-secondary">Powrót</button>
+            <button id="kpir-calculate" class="btn btn-primary">Oblicz cenę</button>
+          </div>
+        </div>
+
+        <!-- KH Step 1: Business Form -->
+        <div id="kh-form-panel" class="panel hidden">
+          <h2>KH - Forma prowadzonej działalności gospodarczej</h2>
+          
+          <div class="form-group full-width">
+            <div class="radio-group vertical">
+              <label class="radio-option">
+                <input type="radio" name="kh-business-form" value="jednoosobowa" id="kh-jednoosobowa" />
+                <span>Jednoosobowa działalność gospodarcza</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-business-form" value="sp-zoo" id="kh-sp-zoo" />
+                <span>Spółka z ograniczoną odpowiedzialnością</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-business-form" value="spolka-jawna" id="kh-spolka-jawna" />
+                <span>Spółka Jawna</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-business-form" value="spolka-komandytowa" id="kh-spolka-komandytowa" />
+                <span>Spółka komandytowa</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-business-form" value="spolka-komandytowo-akcyjna" id="kh-spolka-komandytowo-akcyjna" />
+                <span>Spółka komandytowo-akcyjna</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-business-form" value="fundacja" id="kh-fundacja" />
+                <span>Fundacja</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-business-form" value="stowarzyszenie" id="kh-stowarzyszenie" />
+                <span>Stowarzyszenie</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="back-from-kh-form" class="btn btn-secondary">Powrót</button>
+            <button id="kh-form-next" class="btn btn-primary">Dalej</button>
+          </div>
+        </div>
+
+        <!-- KH Step 2: Document Count -->
+        <div id="kh-docs-panel" class="panel hidden">
+          <h2>KH - Liczba dokumentów</h2>
+          
+          <div class="form-group full-width">
+            <label for="kh-docs">Proszę wskazać miesięczną liczbę dokumentów</label>
             <select id="kh-docs" class="form-control">
+              <option value="">Wybierz przedział</option>
               <option value="0-20">0-20</option>
               <option value="21-40">21-40</option>
               <option value="41-60">41-60</option>
               <option value="61-80">61-80</option>
               <option value="81-100">81-100</option>
               <option value="101-120">101-120</option>
-              <option value="121-140">121-140</option>
-              <option value="141-160">141-160</option>
-              <option value="161-180">161-180</option>
-              <option value="181-200">181-200</option>
-              <option value="201-220">201-220</option>
-              <option value="221-240">221-240</option>
-              <option value="241-260">241-260</option>
-              <option value="261-280">261-280</option>
-              <option value="281-300">281-300</option>
-              <option value="301-320">301-320</option>
-              <option value="321-340">321-340</option>
-              <option value="341-360">341-360</option>
-              <option value="361-380">361-380</option>
-              <option value="381-400">381-400</option>
-              <option value="401-420">401-420</option>
-              <option value="421-440">421-440</option>
-              <option value="441-460">441-460</option>
-              <option value="461-480">461-480</option>
-              <option value="481-500">481-500</option>
+              <option value="121-150">121-150</option>
+              <option value="150-200">150-200</option>
+              <option value="201-250">201-250</option>
+              <option value="251-300">251-300</option>
+              <option value="301-350">301-350</option>
+              <option value="351-400">351-400</option>
+              <option value="401-450">401-450</option>
+              <option value="451-500">451-500</option>
             </select>
-          </div>
-          <div class="form-group">
-            <label for="kh-production">Produkcja/Budowlanka:</label>
-            <div class="radio-group">
-              <label
-                ><input type="radio" name="kh-production" value="nie" checked />
-                NIE</label
-              >
-              <label
-                ><input type="radio" name="kh-production" value="tak" />
-                TAK</label
-              >
+            
+            <div class="info-message">
+              <strong>Jako dokument traktuje się:</strong> fakturę zakupu/sprzedaży, notę odsetkową/obciążeniową, kompensatę, polisę, dowód wewnętrzny, polecenie księgowania (m.in. ZUS, różnice kursowe, lista płac, rachunek do umowy pracowniczej, amortyzacja, RMK), dokument magazynowy, każde 10 transakcji z wyciągu bankowego i/lub raportu kasowego (wyciąg bankowy z rachunku VAT liczony jako 1 jeden dokument bez względu na ilość transakcji).
             </div>
           </div>
-          <div class="form-group">
-            <label for="kh-cit">CIT Estoński:</label>
-            <div class="radio-group">
-              <label
-                ><input type="radio" name="kh-cit" value="nie" checked />
-                NIE</label
-              >
-              <label
-                ><input type="radio" name="kh-cit" value="tak" /> TAK</label
-              >
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="kh-vat-margin">VAT Marża:</label>
-            <div class="radio-group">
-              <label
-                ><input type="radio" name="kh-vat-margin" value="nie" checked />
-                NIE</label
-              >
-              <label
-                ><input type="radio" name="kh-vat-margin" value="tak" />
-                TAK</label
-              >
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="kh-vat-proportion">Proporcja VAT:</label>
-            <div class="radio-group">
-              <label
-                ><input
-                  type="radio"
-                  name="kh-vat-proportion"
-                  value="nie"
-                  checked />
-                NIE</label
-              >
-              <label
-                ><input type="radio" name="kh-vat-proportion" value="tak" />
-                TAK</label
-              >
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="kh-internet-payments">Płatności Internetowe:</label>
-            <div class="radio-group">
-              <label
-                ><input
-                  type="radio"
-                  name="kh-internet-payments"
-                  value="nie"
-                  checked />
-                NIE</label
-              >
-              <label
-                ><input type="radio" name="kh-internet-payments" value="tak" />
-                TAK</label
-              >
-            </div>
-          </div>
-          <div id="kh-internet-payments-count" class="form-group hidden">
-            <label for="kh-payments-count">Liczba płatności:</label>
-            <select id="kh-payments-count" class="form-control">
-              <option value="1-5">1-5</option>
-              <option value="6-10">6-10</option>
-              <option value="11-15">11-15</option>
-              <option value="16-20">16-20</option>
-              <option value="21-25">21-25</option>
-              <option value="26-30">26-30</option>
-              <option value="31-35">31-35</option>
-              <option value="36-40">36-40</option>
-              <option value="41-45">41-45</option>
-              <option value="46-50">46-50</option>
-              <option value="51-55">51-55</option>
-              <option value="56-60">56-60</option>
-              <option value="61-65">61-65</option>
-              <option value="66-70">66-70</option>
-              <option value="71-75">71-75</option>
-              <option value="76-80">76-80</option>
-              <option value="81-85">81-85</option>
-              <option value="86-90">86-90</option>
-              <option value="91-95">91-95</option>
-              <option value="96-100">96-100</option>
-            </select>
-          </div>
+
           <div class="button-group">
-            <button id="back-from-kh" class="back-button">Powrót</button>
-            <button class="calculate-button">Oblicz</button>
+            <button id="back-from-kh-docs" class="btn btn-secondary">Powrót</button>
+            <button id="kh-docs-next" class="btn btn-primary">Dalej</button>
           </div>
         </div>
 
-        <div id="result-panel" class="options-panel hidden">
-          <h2>Wynik kalkulacji</h2>
-          <div class="result-container">
-            <div class="price-breakdown">
-              <p>
-                <strong>Rodzaj księgowości:</strong>
-                <span id="result-type"></span>
-              </p>
-              <p>
-                <strong>Liczba dokumentów:</strong>
-                <span id="result-docs"></span>
-              </p>
-              <p>
-                <strong>Cena bazowa:</strong>
-                <span id="result-base-price"></span>
-              </p>
-              <div id="result-extras"></div>
+        <!-- KH Step 3: Business Activities -->
+        <div id="kh-activities-panel" class="panel hidden">
+          <h2>KH - Zakres działalności gospodarczej</h2>
+          <h3>Możliwość wyboru wielu opcji</h3>
+          
+          <div class="activities-grid">
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="uslugi-budowlane" />
+                <span class="checkmark"></span>
+                I. Usługi budowlane
+              </label>
             </div>
-            <div class="final-price">
-              <h3>Cena końcowa:</h3>
-              <p id="final-price" class="price"></p>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="dzialalnosc-deweloperska" />
+                <span class="checkmark"></span>
+                II. Działalność deweloperska
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="uslugi-informatyczne" />
+                <span class="checkmark"></span>
+                III. Usługi informatyczne i programistyczne
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="doradztwo" />
+                <span class="checkmark"></span>
+                IV. Doradztwo prawne, podatkowe lub biznesowe
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="uslugi-finansowe" />
+                <span class="checkmark"></span>
+                V. Usługi finansowe
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="handel" />
+                <span class="checkmark"></span>
+                VI. Handel detaliczny lub hurtowy (w tym e-commerce)
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="produkcja" />
+                <span class="checkmark"></span>
+                VII. Produkcja
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="transport" />
+                <span class="checkmark"></span>
+                VIII. Transport
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="marketing" />
+                <span class="checkmark"></span>
+                IX. Marketing, reklama i usługi kreatywne
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="kosmetyka" />
+                <span class="checkmark"></span>
+                X. Usługi kosmetyczne, fryzjerskie i wellness
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="szkolenia" />
+                <span class="checkmark"></span>
+                XI. Szkolenia, edukacja, działalność oświatowa
+              </label>
+            </div>
+            <div class="activity-item">
+              <label class="checkbox-label">
+                <input type="checkbox" name="kh-activity" value="inna" />
+                <span class="checkmark"></span>
+                XII. Inna działalność
+              </label>
             </div>
           </div>
-          <button id="calculate-again" class="calculate-button">
-            Oblicz ponownie
-          </button>
+
+          <div class="button-group">
+            <button id="back-from-kh-activities" class="btn btn-secondary">Powrót</button>
+            <button id="kh-activities-next" class="btn btn-primary">Dalej</button>
+          </div>
+        </div>
+
+        <!-- KH Step 4: Special Procedures -->
+        <div id="kh-procedures-panel" class="panel hidden">
+          <h2>KH - Procedury szczególne</h2>
+          
+          <div class="procedures-grid">
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>I. Estoński CIT</h4>
+              </div>
+              <div class="procedure-description">
+                To uproszczona forma opodatkowania spółek, w której podatek dochodowy płaci się dopiero przy wypłacie zysku (np. dywidendy), a nie na bieżąco. Pozwala to na odroczenie podatku i korzystne reinwestowanie zysków w firmie.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kh-estonian-cit" value="nie" id="kh-estonian-cit-nie" checked />
+                  <span>NIE</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kh-estonian-cit" value="tak" id="kh-estonian-cit-tak" />
+                  <span>TAK</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>II. Proporcja VAT</h4>
+              </div>
+              <div class="procedure-description">
+                Dotyczy sytuacji, gdy firma wykonuje zarówno czynności opodatkowane VAT, jak i zwolnione z VAT. W takim przypadku odliczenie podatku naliczonego następuje tylko w odpowiedniej proporcji – tzw. wskaźniku struktury sprzedaży. Ostateczna proporcja jest wyliczana na koniec roku i korygowana w deklaracji VAT.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kh-vat-proportion" value="nie" id="kh-vat-proportion-nie" checked />
+                  <span>NIE</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kh-vat-proportion" value="tak" id="kh-vat-proportion-tak" />
+                  <span>TAK</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>III. VAT OSS</h4>
+              </div>
+              <div class="procedure-description">
+                To uproszczony system rozliczania VAT przy sprzedaży towarów i usług konsumentom z innych krajów UE (np. w e-commerce). Dzięki OSS nie trzeba rejestrować się do VAT w każdym państwie, tylko rozlicza się całość przez polski urząd skarbowy.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kh-vat-oss" value="nie" id="kh-vat-oss-nie" checked />
+                  <span>NIE</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kh-vat-oss" value="tak" id="kh-vat-oss-tak" />
+                  <span>TAK</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>IV. VAT marża</h4>
+              </div>
+              <div class="procedure-description">
+                Dotyczy m.in. sprzedaży używanych towarów, dzieł sztuki, antyków czy usług turystycznych. Podatek VAT płacony jest tylko od marży, czyli różnicy między ceną sprzedaży a ceną zakupu, a nie od całej wartości faktury.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kh-vat-margin" value="nie" id="kh-vat-margin-nie" checked />
+                  <span>NIE</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kh-vat-margin" value="tak" id="kh-vat-margin-tak" />
+                  <span>TAK</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>V. Wyciąg bankowy zostanie udostępniony w formie MT940</h4>
+              </div>
+              <div class="procedure-description">
+                To elektroniczna wersja wyciągu bankowego w formacie MT940 – czyli standardzie używanym w księgowości do automatycznego importu danych o operacjach bankowych. Plik ten można łatwo wczytać do systemu księgowego. Chętnie wytłumaczymy Ci jak to zrobić, abyś uniknął dodatkowej opłaty za wprowadzanie ręczne dokumentów.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kh-mt940" value="tak" id="kh-mt940-tak" checked />
+                  <span>TAK</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kh-mt940" value="nie" id="kh-mt940-nie" />
+                  <span>NIE</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="procedure-item">
+              <div class="procedure-header">
+                <h4>VI. Udostępnię faktury sprzedaży w formie pliku JPK_FA</h4>
+                <div class="info-icon" title="dotyczy klientów, którzy mają powyżej 10 faktur sprzedaży miesięcznie">ℹ️</div>
+              </div>
+              <div class="procedure-description">
+                Plik JPK_FA generuje się z programu księgowego lub systemu fakturowania – nie trzeba przesyłać każdej faktury osobno, wszystko jest w jednym zestawieniu. Chętnie wytłumaczymy Ci jak to zrobić, abyś uniknął dodatkowej opłaty za wprowadzanie ręczne dokumentów.
+              </div>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kh-jpk-fa" value="tak" id="kh-jpk-fa-tak" checked />
+                  <span>TAK</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kh-jpk-fa" value="nie" id="kh-jpk-fa-nie" />
+                  <span>NIE</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="back-from-kh-procedures" class="btn btn-secondary">Powrót</button>
+            <button id="kh-procedures-next" class="btn btn-primary">Dalej</button>
+          </div>
+        </div>
+
+        <!-- KH Step 5: Kadry -->
+        <div id="kh-kadry-panel" class="panel hidden">
+          <h2>KH - Kadry</h2>
+          
+          <div class="form-group full-width">
+            <h4>Czy Państwa firma posiada pracowników, zleceniobiorców lub członków zarządu, którym wypłaca wynagrodzenie?</h4>
+            <div class="radio-group horizontal">
+              <label class="radio-option">
+                <input type="radio" name="kh-has-employees" value="nie" id="kh-has-employees-nie" />
+                <span>NIE</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-has-employees" value="tak" id="kh-has-employees-tak" />
+                <span>TAK</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="kh-payroll-question" class="form-group full-width hidden">
+            <h4>Czy chcesz skorzystać również z usługi kadrowo-płacowej?</h4>
+            <div class="radio-group horizontal">
+              <label class="radio-option">
+                <input type="radio" name="kh-wants-payroll" value="nie" id="kh-wants-payroll-nie" />
+                <span>NIE</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-wants-payroll" value="tak" id="kh-wants-payroll-tak" />
+                <span>TAK</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="kh-payroll-details" class="form-group full-width hidden">
+            <h4>Wskaż odpowiednio liczbę osób do rozliczenia:</h4>
+            
+            <div class="payroll-input-group">
+              <label for="kh-employees-count">Liczba pracowników:</label>
+              <input type="number" id="kh-employees-count" class="form-control" min="0" value="0" />
+            </div>
+
+            <div id="kh-pfron-question" class="form-group hidden">
+              <h5>Czy zatrudnieni pracownicy posiadają orzeczenie o niepełnosprawności i pracodawca otrzymuje dofinansowanie z PFRON?</h5>
+              <div class="radio-group horizontal">
+                <label class="radio-option">
+                  <input type="radio" name="kh-has-pfron" value="nie" id="kh-has-pfron-nie" />
+                  <span>NIE</span>
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="kh-has-pfron" value="tak" id="kh-has-pfron-tak" />
+                  <span>TAK</span>
+                </label>
+              </div>
+            </div>
+
+            <div id="kh-pfron-count" class="payroll-input-group hidden">
+              <label for="kh-pfron-employees">Wskaż liczbę pracowników objętych PFRON:</label>
+              <input type="number" id="kh-pfron-employees" class="form-control" min="0" value="0" />
+            </div>
+
+            <div class="payroll-input-group">
+              <label for="kh-contractors-count">Liczba zleceniobiorców:</label>
+              <input type="number" id="kh-contractors-count" class="form-control" min="0" value="0" />
+            </div>
+
+            <div class="payroll-input-group">
+              <label for="kh-board-count">Liczba członków zarządu z prawem do wynagrodzenia:</label>
+              <input type="number" id="kh-board-count" class="form-control" min="0" value="0" />
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="back-from-kh-kadry" class="btn btn-secondary">Powrót</button>
+            <button id="kh-calculate" class="btn btn-primary">Oblicz cenę</button>
+          </div>
+        </div>
+
+        <!-- Result Panel -->
+        <div id="result-panel" class="panel hidden">
+          <h2>Wycena usługi</h2>
+          
+          <!-- Final Price Section -->
+          <div class="result-summary">
+            <div class="price-display">
+              <span class="price-label">Cena końcowa</span>
+              <div class="price-amount" id="final-price"></div>
+            </div>
+          </div>
+
+          <!-- Services Sections -->
+          <div class="services-sections">
+            <!-- Usługi księgowe Section -->
+            <div class="service-section">
+              <h3>Usługi księgowe</h3>
+              
+              <div class="details-grid">
+                <div class="detail-item">
+                  <span class="detail-label">Rodzaj księgowości</span>
+                  <span class="detail-value" id="result-type"></span>
+                </div>
+
+                <div class="detail-item">
+                  <span class="detail-label">Liczba dokumentów</span>
+                  <span class="detail-value" id="result-docs"></span>
+                </div>
+                
+                <div class="detail-item">
+                  <span class="detail-label">Forma działalności</span>
+                  <span class="detail-value" id="result-business-form"></span>
+                </div>
+                
+                <div class="detail-item">
+                  <span class="detail-label">Cena podstawowa</span>
+                  <span class="detail-value" id="result-base-price"></span>
+                </div>
+              </div>
+              
+              <!-- Additional Services -->
+              <div id="result-extras" class="extras-section"></div>
+              
+              <div class="service-total">
+                <div class="detail-item">
+                  <span class="detail-label">Razem usługi księgowe</span>
+                  <span class="detail-value" id="accounting-total"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Usługi kadrowo-płacowe Section -->
+            <div id="payroll-section" class="service-section hidden">
+              <h3>Usługi kadrowo-płacowe</h3>
+              
+              <div class="details-grid">
+                <div class="detail-item">
+                  <span class="detail-label">Liczba pracowników</span>
+                  <span class="detail-value" id="result-employees"></span>
+                </div>
+                
+                <div class="detail-item">
+                  <span class="detail-label">Liczba zleceniobiorców</span>
+                  <span class="detail-value" id="result-contractors"></span>
+                </div>
+                
+                <div class="detail-item">
+                  <span class="detail-label">Liczba członków zarządu</span>
+                  <span class="detail-value" id="result-board"></span>
+                </div>
+
+                <div id="pfron-detail" class="detail-item hidden">
+                  <span class="detail-label">Pracownicy objęci PFRON</span>
+                  <span class="detail-value" id="result-pfron"></span>
+                </div>
+              </div>
+              
+              <!-- Payroll Services -->
+              <div id="payroll-extras" class="extras-section"></div>
+              
+              <div class="service-total">
+                <div class="detail-item">
+                  <span class="detail-label">Razem usługi kadrowo-płacowe</span>
+                  <span class="detail-value" id="payroll-total"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button id="calculate-again" class="btn btn-primary">Nowa kalkulacja</button>
+          </div>
         </div>
       </main>
     </div>
