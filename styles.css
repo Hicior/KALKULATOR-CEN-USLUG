@@ -773,6 +773,36 @@ label {
   padding-bottom: 0.5rem;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+}
+
+.section-header h3 {
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 1.3rem;
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.section-total {
+  color: var(--color-primary-content);
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: var(--color-primary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-field);
+  box-shadow: var(--shadow-md);
+  min-width: 120px;
+  text-align: center;
+}
+
 .service-total {
   margin-top: 1.5rem;
   padding-top: 1rem;
@@ -799,5 +829,21 @@ label {
   
   .service-section {
     padding: 1rem;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .section-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .section-total {
+    font-size: 1.1rem;
+    padding: 0.4rem 0.8rem;
+    align-self: flex-end;
   }
 }

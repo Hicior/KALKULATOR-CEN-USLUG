@@ -34,6 +34,24 @@ const khPriceTable = {
   "451-500": 9000.0,
 };
 
+// Special pricing for Spółka akcyjna and Prosta spółka akcyjna
+const khSpecialPriceTable = {
+  "0-20": 2990.0,
+  "21-40": 3910.0,
+  "41-60": 4715.0,
+  "61-80": 5750.0,
+  "81-100": 6555.0,
+  "101-120": 7015.0,
+  "121-150": 7705.0,
+  "150-200": 8855.0,
+  "201-250": 10005.0,
+  "251-300": 11155.0,
+  "301-350": 12305.0,
+  "351-400": 13455.0,
+  "401-450": 14605.0,
+  "451-500": 15755.0,
+};
+
 // DOM elements
 const mainPanel = document.getElementById("main-panel");
 const resultPanel = document.getElementById("result-panel");
@@ -603,7 +621,16 @@ function validateAndCalculateKh() {
 
 function calculateKh() {
   currentCalculation.extras = [];
-  let basePrice = khPriceTable[currentCalculation.docs];
+  
+  // Use special pricing for Spółka akcyjna and Prosta spółka akcyjna
+  let basePrice;
+  if (currentCalculation.businessForm === "spolka-akcyjna" || 
+      currentCalculation.businessForm === "prosta-spolka-akcyjna") {
+    basePrice = khSpecialPriceTable[currentCalculation.docs];
+  } else {
+    basePrice = khPriceTable[currentCalculation.docs];
+  }
+  
   let totalAdditionalPercentage = 0;
   let includedBurdens = [];
 
@@ -724,7 +751,9 @@ function getBusinessFormDisplayName(form) {
     "spolka-komandytowa": "Spółka komandytowa",
     "spolka-komandytowo-akcyjna": "Spółka komandytowo-akcyjna",
     "fundacja": "Fundacja",
-    "stowarzyszenie": "Stowarzyszenie"
+    "stowarzyszenie": "Stowarzyszenie",
+    "spolka-akcyjna": "Spółka akcyjna",
+    "prosta-spolka-akcyjna": "Prosta spółka akcyjna"
   };
   return displayNames[form] || form;
 }

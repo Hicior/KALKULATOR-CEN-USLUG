@@ -291,6 +291,14 @@
                 <input type="radio" name="kh-business-form" value="stowarzyszenie" id="kh-stowarzyszenie" />
                 <span>Stowarzyszenie</span>
               </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-business-form" value="spolka-akcyjna" id="kh-spolka-akcyjna" />
+                <span>Spółka akcyjna</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="kh-business-form" value="prosta-spolka-akcyjna" id="kh-prosta-spolka-akcyjna" />
+                <span>Prosta spółka akcyjna</span>
+              </label>
             </div>
           </div>
 
@@ -652,7 +660,10 @@
           <div class="services-sections">
             <!-- Usługi księgowe Section -->
             <div class="service-section">
-              <h3>Usługi księgowe</h3>
+              <div class="section-header">
+                <h3>Usługi księgowe</h3>
+                <span class="section-total" id="accounting-total"></span>
+              </div>
               
               <div class="details-grid">
                 <div class="detail-item">
@@ -678,18 +689,14 @@
               
               <!-- Additional Services -->
               <div id="result-extras" class="extras-section"></div>
-              
-              <div class="service-total">
-                <div class="detail-item">
-                  <span class="detail-label">Razem usługi księgowe</span>
-                  <span class="detail-value" id="accounting-total"></span>
-                </div>
-              </div>
             </div>
 
             <!-- Usługi kadrowo-płacowe Section -->
             <div id="payroll-section" class="service-section hidden">
-              <h3>Usługi kadrowo-płacowe</h3>
+              <div class="section-header">
+                <h3>Usługi kadrowo-płacowe</h3>
+                <span class="section-total" id="payroll-total"></span>
+              </div>
               
               <div class="details-grid">
                 <div class="detail-item">
@@ -715,13 +722,6 @@
               
               <!-- Payroll Services -->
               <div id="payroll-extras" class="extras-section"></div>
-              
-              <div class="service-total">
-                <div class="detail-item">
-                  <span class="detail-label">Razem usługi kadrowo-płacowe</span>
-                  <span class="detail-value" id="payroll-total"></span>
-                </div>
-              </div>
             </div>
           </div>
 
