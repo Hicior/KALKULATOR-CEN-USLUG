@@ -93,6 +93,136 @@ let currentCalculation = {
   payrollPrice: 0,
 };
 
+// Validation utilities
+const ValidationUtils = {
+  // Show validation error
+  showError(element, message, scrollToElement = true) {
+    this.clearError(element);
+    
+    // Add error class to element
+    element.classList.add('error');
+    
+    // Add error class to parent form group if exists
+    const formGroup = element.closest('.form-group');
+    if (formGroup) {
+      formGroup.classList.add('has-error');
+    }
+    
+    // Create error message element
+    const errorElement = document.createElement('div');
+    errorElement.className = 'validation-error';
+    errorElement.textContent = message;
+    errorElement.setAttribute('data-validation-error', 'true');
+    errorElement.setAttribute('role', 'alert');
+    errorElement.setAttribute('aria-live', 'polite');
+    
+    // Insert error message after the element
+    if (element.parentNode) {
+      element.parentNode.insertBefore(errorElement, element.nextSibling);
+    }
+    
+    // Add shake animation
+    element.classList.add('shake');
+    setTimeout(() => {
+      element.classList.remove('shake');
+    }, 500);
+    
+    // Scroll to element if needed
+    if (scrollToElement) {
+      setTimeout(() => {
+        element.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      }, 100);
+    }
+    
+    return false;
+  },
+  
+  // Clear validation error
+  clearError(element) {
+    // Remove error classes
+    element.classList.remove('error');
+    
+    // Remove error class from parent form group
+    const formGroup = element.closest('.form-group');
+    if (formGroup) {
+      formGroup.classList.remove('has-error');
+    }
+    
+    // Remove existing error messages
+    const existingErrors = element.parentNode?.querySelectorAll('[data-validation-error="true"]');
+    if (existingErrors) {
+      existingErrors.forEach(error => error.remove());
+    }
+  },
+  
+  // Clear all validation errors in a container
+  clearAllErrors(container) {
+    const errorElements = container.querySelectorAll('.error');
+    errorElements.forEach(element => {
+      this.clearError(element);
+    });
+    
+    const errorMessages = container.querySelectorAll('[data-validation-error="true"]');
+    errorMessages.forEach(message => message.remove());
+    
+    const errorGroups = container.querySelectorAll('.has-error');
+    errorGroups.forEach(group => group.classList.remove('has-error'));
+  },
+  
+  // Validate radio group
+  validateRadioGroup(name, errorMessage, container = document) {
+    const radioGroup = container.querySelector(`input[name="${name}"]`);
+    const checked = container.querySelector(`input[name="${name}"]:checked`);
+    
+    if (!checked && radioGroup) {
+      const radioContainer = radioGroup.closest('.radio-group') || radioGroup.closest('.form-group');
+      if (radioContainer) {
+        return this.showError(radioContainer, errorMessage);
+      }
+    }
+    
+    if (radioGroup) {
+      const radioContainer = radioGroup.closest('.radio-group') || radioGroup.closest('.form-group');
+      if (radioContainer) {
+        this.clearError(radioContainer);
+      }
+    }
+    
+    return true;
+  },
+  
+  // Validate select dropdown
+  validateSelect(selectElement, errorMessage) {
+    if (!selectElement.value) {
+      return this.showError(selectElement, errorMessage);
+    }
+    
+    this.clearError(selectElement);
+    return true;
+  },
+  
+  // Validate number input
+  validateNumber(inputElement, errorMessage, min = null, max = null) {
+    const value = parseInt(inputElement.value) || 0;
+    
+    if (min !== null && value < min) {
+      return this.showError(inputElement, errorMessage);
+    }
+    
+    if (max !== null && value > max) {
+      return this.showError(inputElement, errorMessage);
+    }
+    
+    this.clearError(inputElement);
+    return true;
+  },
+  
+
+};
+
 // Event listeners
 document.addEventListener("DOMContentLoaded", function () {
   setupEventListeners();
@@ -172,6 +302,112 @@ function setupEventListeners() {
 
   // Keyboard accessibility
   setupKeyboardNavigation();
+  
+  // Real-time validation setup
+  setupRealTimeValidation();
+}
+
+function setupRealTimeValidation() {
+  // Clear validation errors when user starts interacting with radio buttons
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const container = this.closest('.radio-group') || this.closest('.form-group');
+      if (container) {
+        ValidationUtils.clearError(container);
+      }
+    });
+  });
+  
+  // Clear validation errors when user starts interacting with checkboxes
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const activitiesGrid = document.querySelector('.activities-grid');
+      if (activitiesGrid && activitiesGrid.classList.contains('error')) {
+        ValidationUtils.clearError(activitiesGrid);
+        activitiesGrid.classList.remove('error');
+      }
+    });
+  });
+  
+  // Clear validation errors when user starts typing in select elements
+  document.querySelectorAll('select').forEach(select => {
+    select.addEventListener('change', function() {
+      ValidationUtils.clearError(this);
+    });
+  });
+  
+  // Real-time validation for number inputs
+  document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener('input', function() {
+      ValidationUtils.clearError(this);
+      
+      // Real-time validation for partners count
+      if (this.id === 'kpir-partners-count' || this.id === 'kh-partners-count') {
+        const value = parseInt(this.value) || 0;
+        if (value > 0 && value < 2) {
+          ValidationUtils.showError(this, "Liczba wspólników musi być większa niż 1.", false);
+        }
+      }
+      
+             // Real-time validation for PFRON employees
+       if (this.id === 'kpir-pfron-employees') {
+         const totalEmployees = parseInt(document.getElementById('kpir-employees-count').value) || 0;
+         const pfronCount = parseInt(this.value) || 0;
+         const hasPfronSelected = document.querySelector('input[name="kpir-has-pfron"]:checked')?.value === 'tak';
+         
+         if (hasPfronSelected && pfronCount === 0 && this.value !== '') {
+           ValidationUtils.showError(this, "Proszę wskazać liczbę pracowników objętych PFRON (minimum 1).", false);
+         } else if (pfronCount > totalEmployees) {
+           ValidationUtils.showError(this, "Liczba pracowników PFRON nie może być większa niż całkowita liczba pracowników.", false);
+         }
+       }
+       
+       if (this.id === 'kh-pfron-employees') {
+         const totalEmployees = parseInt(document.getElementById('kh-employees-count').value) || 0;
+         const pfronCount = parseInt(this.value) || 0;
+         const hasPfronSelected = document.querySelector('input[name="kh-has-pfron"]:checked')?.value === 'tak';
+         
+         if (hasPfronSelected && pfronCount === 0 && this.value !== '') {
+           ValidationUtils.showError(this, "Proszę wskazać liczbę pracowników objętych PFRON (minimum 1).", false);
+         } else if (pfronCount > totalEmployees) {
+           ValidationUtils.showError(this, "Liczba pracowników PFRON nie może być większa niż całkowita liczba pracowników.", false);
+         }
+       }
+    });
+    
+    // Prevent negative values
+    input.addEventListener('keydown', function(e) {
+      // Allow: backspace, delete, tab, escape, enter
+      if ([46, 8, 9, 27, 13].indexOf(e.keyCode) !== -1 ||
+          // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+          (e.keyCode === 65 && e.ctrlKey === true) ||
+          (e.keyCode === 67 && e.ctrlKey === true) ||
+          (e.keyCode === 86 && e.ctrlKey === true) ||
+          (e.keyCode === 88 && e.ctrlKey === true) ||
+          // Allow: home, end, left, right, down, up
+          (e.keyCode >= 35 && e.keyCode <= 40)) {
+        return;
+      }
+      // Ensure that it is a number and stop the keypress
+      if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+        e.preventDefault();
+      }
+    });
+  });
+  
+  // Clear all errors when navigating between panels
+  document.querySelectorAll('button[id*="back-from"]').forEach(button => {
+    button.addEventListener('click', function() {
+      setTimeout(() => {
+        const allPanels = document.querySelectorAll('.panel');
+        allPanels.forEach(panel => {
+          if (!panel.classList.contains('hidden')) {
+            ValidationUtils.clearAllErrors(panel);
+          }
+        });
+      }, 100);
+    });
+  });
 }
 
 function setupKeyboardNavigation() {
@@ -232,6 +468,19 @@ function resetAndGoHome() {
   resetCalculation();
   kpirCard.classList.remove("selected");
   khCard.classList.remove("selected");
+  
+  // Clear all validation errors from all panels
+  const allPanels = document.querySelectorAll('.panel');
+  allPanels.forEach(panel => {
+    ValidationUtils.clearAllErrors(panel);
+  });
+  
+  // Reset all form values
+  document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+  document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+  document.querySelectorAll('input[type="number"]').forEach(input => input.value = input.defaultValue || '0');
+  
   showPanel(mainPanel);
 }
 
@@ -264,32 +513,43 @@ function toggleKpirPartnersInput() {
 }
 
 function validateAndProceedKpirForm() {
+  // Clear any existing errors in this panel
+  ValidationUtils.clearAllErrors(kpirFormPanel);
+  
   const businessForm = document.querySelector('input[name="kpir-business-form"]:checked');
   
-  if (!businessForm) {
-    alert("Proszę wybrać formę prowadzonej działalności gospodarczej.");
+  if (!ValidationUtils.validateRadioGroup("kpir-business-form", "Proszę wybrać formę prowadzonej działalności gospodarczej.", kpirFormPanel)) {
     return;
   }
   
   currentCalculation.businessForm = businessForm.value;
   
   if (businessForm.value === "spolka-cywilna" || businessForm.value === "spolka-jawna") {
-    const partnersCount = parseInt(document.getElementById("kpir-partners-count").value) || 1;
-    currentCalculation.partnersCount = Math.max(1, partnersCount);
+    const partnersCountInput = document.getElementById("kpir-partners-count");
+    const partnersCount = parseInt(partnersCountInput.value) || 2;
+    
+    if (!ValidationUtils.validateNumber(partnersCountInput, "Liczba wspólników musi być większa niż 1.", 2)) {
+      return;
+    }
+    
+    currentCalculation.partnersCount = Math.max(2, partnersCount);
   }
   
   showPanel(kpirDocsPanel);
 }
 
 function validateAndProceedKpirDocs() {
-  const docs = document.getElementById("kpir-docs").value;
+  // Clear any existing errors in this panel
+  ValidationUtils.clearAllErrors(kpirDocsPanel);
   
-  if (!docs) {
-    alert("Proszę wybrać przedział liczby dokumentów.");
+  const docsSelect = document.getElementById("kpir-docs");
+  
+  if (!ValidationUtils.validateSelect(docsSelect, "Proszę wybrać przedział liczby dokumentów.")) {
     return;
   }
   
-  currentCalculation.docs = docs;
+  currentCalculation.docs = docsSelect.value;
+  
   showPanel(kpirProceduresPanel);
 }
 
@@ -343,50 +603,100 @@ function toggleKpirPfronQuestions() {
 function toggleKpirPfronCount() {
   const hasPfron = document.querySelector('input[name="kpir-has-pfron"]:checked')?.value;
   const pfronCount = document.getElementById("kpir-pfron-count");
+  const pfronInput = document.getElementById("kpir-pfron-employees");
   
   if (hasPfron === "tak") {
     pfronCount.classList.remove("hidden");
+    // Set default value to 1 when PFRON is selected
+    if (pfronInput.value === "0" || pfronInput.value === "") {
+      pfronInput.value = 1;
+    }
   } else {
     pfronCount.classList.add("hidden");
-    document.getElementById("kpir-pfron-employees").value = 0;
+    pfronInput.value = 0;
+    ValidationUtils.clearError(pfronInput);
   }
 }
 
 function validateAndCalculateKpir() {
-  const hasEmployees = document.querySelector('input[name="kpir-has-employees"]:checked')?.value;
+  // Clear any existing errors in this panel
+  ValidationUtils.clearAllErrors(kpirKadryPanel);
   
-  if (!hasEmployees) {
-    alert("Proszę odpowiedzieć na pytanie o pracowników.");
-    return;
+  let validationPassed = true;
+  
+  // Validate has employees question
+  if (!ValidationUtils.validateRadioGroup("kpir-has-employees", "Proszę odpowiedzieć na pytanie o pracowników.", kpirKadryPanel)) {
+    validationPassed = false;
   }
   
+  const hasEmployees = document.querySelector('input[name="kpir-has-employees"]:checked')?.value;
   currentCalculation.hasEmployees = hasEmployees === "tak";
   
   if (currentCalculation.hasEmployees) {
-    const wantsPayroll = document.querySelector('input[name="kpir-wants-payroll"]:checked')?.value;
-    
-    if (!wantsPayroll) {
-      alert("Proszę odpowiedzieć na pytanie o usługę kadrowo-płacową.");
-      return;
+    // Validate wants payroll question
+    if (!ValidationUtils.validateRadioGroup("kpir-wants-payroll", "Proszę odpowiedzieć na pytanie o usługę kadrowo-płacową.", kpirKadryPanel)) {
+      validationPassed = false;
     }
     
+    const wantsPayroll = document.querySelector('input[name="kpir-wants-payroll"]:checked')?.value;
     currentCalculation.wantsPayroll = wantsPayroll === "tak";
     
     if (currentCalculation.wantsPayroll) {
-      currentCalculation.employeesCount = parseInt(document.getElementById("kpir-employees-count").value) || 0;
-      currentCalculation.contractorsCount = parseInt(document.getElementById("kpir-contractors-count").value) || 0;
-      currentCalculation.boardCount = parseInt(document.getElementById("kpir-board-count").value) || 0;
+      // Validate number inputs
+      const employeesInput = document.getElementById("kpir-employees-count");
+      const contractorsInput = document.getElementById("kpir-contractors-count");
+      const boardInput = document.getElementById("kpir-board-count");
       
+      // Get values
+      currentCalculation.employeesCount = parseInt(employeesInput.value) || 0;
+      currentCalculation.contractorsCount = parseInt(contractorsInput.value) || 0;
+      currentCalculation.boardCount = parseInt(boardInput.value) || 0;
+      
+      // Validate that at least one person is selected
+      const totalPeople = currentCalculation.employeesCount + currentCalculation.contractorsCount + currentCalculation.boardCount;
+      if (totalPeople === 0) {
+        ValidationUtils.showError(employeesInput, "Proszę wskazać liczbę osób do rozliczenia (przynajmniej 1 osoba).");
+        validationPassed = false;
+      }
+      
+      // Validate PFRON if there are employees
       if (currentCalculation.employeesCount > 0) {
-        const hasPfron = document.querySelector('input[name="kpir-has-pfron"]:checked')?.value;
-        if (!hasPfron) {
-          alert("Proszę odpowiedzieć na pytanie o PFRON.");
-          return;
+        if (!ValidationUtils.validateRadioGroup("kpir-has-pfron", "Proszę odpowiedzieć na pytanie o PFRON.", kpirKadryPanel)) {
+          validationPassed = false;
+        } else {
+          const hasPfron = document.querySelector('input[name="kpir-has-pfron"]:checked')?.value;
+          currentCalculation.hasPfron = hasPfron === "tak";
+          
+          if (currentCalculation.hasPfron) {
+            const pfronInput = document.getElementById("kpir-pfron-employees");
+            const pfronCount = parseInt(pfronInput.value) || 0;
+            
+            if (pfronCount === 0) {
+              ValidationUtils.showError(pfronInput, "Proszę wskazać liczbę pracowników objętych PFRON (minimum 1).");
+              validationPassed = false;
+            } else if (pfronCount > currentCalculation.employeesCount) {
+              ValidationUtils.showError(pfronInput, "Liczba pracowników PFRON nie może być większa niż całkowita liczba pracowników.");
+              validationPassed = false;
+            } else {
+              currentCalculation.pfronEmployees = pfronCount;
+            }
+          } else {
+            currentCalculation.pfronEmployees = 0;
+          }
         }
-        currentCalculation.hasPfron = hasPfron === "tak";
-        currentCalculation.pfronEmployees = parseInt(document.getElementById("kpir-pfron-employees").value) || 0;
       }
     }
+  } else {
+    currentCalculation.wantsPayroll = false;
+    currentCalculation.employeesCount = 0;
+    currentCalculation.contractorsCount = 0;
+    currentCalculation.boardCount = 0;
+    currentCalculation.hasPfron = false;
+    currentCalculation.pfronEmployees = 0;
+  }
+  
+  if (!validationPassed) {
+    return;
   }
   
   calculateKpir();
@@ -407,7 +717,7 @@ function calculatePayrollPrice() {
   payrollPrice += currentCalculation.contractorsCount * 80;
   
   // Board member pricing: 120 zł per board member
-  payrollPrice += currentCalculation.boardCount * 120;
+  payrollPrice += currentCalculation.boardCount * 80;
   
   // PFRON employees are still counted at full price (no discount)
   
@@ -431,25 +741,29 @@ function calculateKpir() {
   let proceduresPercentage = 0;
 
   // VAT Proportion - 10%
-  if (document.querySelector('input[name="kpir-vat-proportion"]:checked').value === "tak") {
+  const vatProportionSelected = document.querySelector('input[name="kpir-vat-proportion"]:checked');
+  if (vatProportionSelected && vatProportionSelected.value === "tak") {
     proceduresPercentage += 10;
     includedBurdens.push("Proporcja VAT (+10%)");
   }
 
   // VAT OSS - 20%
-  if (document.querySelector('input[name="kpir-vat-oss"]:checked').value === "tak") {
+  const vatOssSelected = document.querySelector('input[name="kpir-vat-oss"]:checked');
+  if (vatOssSelected && vatOssSelected.value === "tak") {
     proceduresPercentage += 20;
     includedBurdens.push("VAT OSS (+20%)");
   }
 
   // VAT Margin - 20%
-  if (document.querySelector('input[name="kpir-vat-margin"]:checked').value === "tak") {
+  const vatMarginSelected = document.querySelector('input[name="kpir-vat-margin"]:checked');
+  if (vatMarginSelected && vatMarginSelected.value === "tak") {
     proceduresPercentage += 20;
     includedBurdens.push("VAT marża (+20%)");
   }
 
-  // JPK_FA - 20% if NO
-  if (document.querySelector('input[name="kpir-jpk-fa"]:checked').value === "nie") {
+  // JPK_FA - 20% if NO (only if selected)
+  const jpkFaSelected = document.querySelector('input[name="kpir-jpk-fa"]:checked');
+  if (jpkFaSelected && jpkFaSelected.value === "nie") {
     proceduresPercentage += 20;
     includedBurdens.push("Brak JPK_FA (+20%)");
   }
@@ -491,32 +805,50 @@ function calculateKpir() {
 
 // KH Workflow Functions
 function validateAndProceedKhForm() {
+  // Clear any existing errors in this panel
+  ValidationUtils.clearAllErrors(khFormPanel);
+  
   const businessForm = document.querySelector('input[name="kh-business-form"]:checked');
   
-  if (!businessForm) {
-    alert("Proszę wybrać formę prowadzonej działalności gospodarczej.");
+  if (!ValidationUtils.validateRadioGroup("kh-business-form", "Proszę wybrać formę prowadzonej działalności gospodarczej.", khFormPanel)) {
     return;
   }
   
   currentCalculation.businessForm = businessForm.value;
+  
   showPanel(khDocsPanel);
 }
 
 function validateAndProceedKhDocs() {
-  const docs = document.getElementById("kh-docs").value;
+  // Clear any existing errors in this panel
+  ValidationUtils.clearAllErrors(khDocsPanel);
   
-  if (!docs) {
-    alert("Proszę wybrać przedział liczby dokumentów.");
+  const docsSelect = document.getElementById("kh-docs");
+  
+  if (!ValidationUtils.validateSelect(docsSelect, "Proszę wybrać przedział liczby dokumentów.")) {
     return;
   }
   
-  currentCalculation.docs = docs;
+  currentCalculation.docs = docsSelect.value;
+  
   showPanel(khActivitiesPanel);
 }
 
 function validateAndProceedKhActivities() {
+  // Clear any existing errors in this panel
+  ValidationUtils.clearAllErrors(khActivitiesPanel);
+  
   const selectedActivities = document.querySelectorAll('input[name="kh-activity"]:checked');
+  
+  if (selectedActivities.length === 0) {
+    const activitiesGrid = document.querySelector('.activities-grid');
+    ValidationUtils.showError(activitiesGrid, "Proszę wybrać przynajmniej jeden rodzaj działalności gospodarczej.");
+    activitiesGrid.classList.add('error');
+    return;
+  }
+  
   currentCalculation.activities = Array.from(selectedActivities).map(cb => cb.value);
+  
   showPanel(khProceduresPanel);
 }
 
@@ -570,50 +902,100 @@ function toggleKhPfronQuestions() {
 function toggleKhPfronCount() {
   const hasPfron = document.querySelector('input[name="kh-has-pfron"]:checked')?.value;
   const pfronCount = document.getElementById("kh-pfron-count");
+  const pfronInput = document.getElementById("kh-pfron-employees");
   
   if (hasPfron === "tak") {
     pfronCount.classList.remove("hidden");
+    // Set default value to 1 when PFRON is selected
+    if (pfronInput.value === "0" || pfronInput.value === "") {
+      pfronInput.value = 1;
+    }
   } else {
     pfronCount.classList.add("hidden");
-    document.getElementById("kh-pfron-employees").value = 0;
+    pfronInput.value = 0;
+    ValidationUtils.clearError(pfronInput);
   }
 }
 
 function validateAndCalculateKh() {
-  const hasEmployees = document.querySelector('input[name="kh-has-employees"]:checked')?.value;
+  // Clear any existing errors in this panel
+  ValidationUtils.clearAllErrors(khKadryPanel);
   
-  if (!hasEmployees) {
-    alert("Proszę odpowiedzieć na pytanie o pracowników.");
-    return;
+  let validationPassed = true;
+  
+  // Validate has employees question
+  if (!ValidationUtils.validateRadioGroup("kh-has-employees", "Proszę odpowiedzieć na pytanie o pracowników.", khKadryPanel)) {
+    validationPassed = false;
   }
   
+  const hasEmployees = document.querySelector('input[name="kh-has-employees"]:checked')?.value;
   currentCalculation.hasEmployees = hasEmployees === "tak";
   
   if (currentCalculation.hasEmployees) {
-    const wantsPayroll = document.querySelector('input[name="kh-wants-payroll"]:checked')?.value;
-    
-    if (!wantsPayroll) {
-      alert("Proszę odpowiedzieć na pytanie o usługę kadrowo-płacową.");
-      return;
+    // Validate wants payroll question
+    if (!ValidationUtils.validateRadioGroup("kh-wants-payroll", "Proszę odpowiedzieć na pytanie o usługę kadrowo-płacową.", khKadryPanel)) {
+      validationPassed = false;
     }
     
+    const wantsPayroll = document.querySelector('input[name="kh-wants-payroll"]:checked')?.value;
     currentCalculation.wantsPayroll = wantsPayroll === "tak";
     
     if (currentCalculation.wantsPayroll) {
-      currentCalculation.employeesCount = parseInt(document.getElementById("kh-employees-count").value) || 0;
-      currentCalculation.contractorsCount = parseInt(document.getElementById("kh-contractors-count").value) || 0;
-      currentCalculation.boardCount = parseInt(document.getElementById("kh-board-count").value) || 0;
+      // Validate number inputs
+      const employeesInput = document.getElementById("kh-employees-count");
+      const contractorsInput = document.getElementById("kh-contractors-count");
+      const boardInput = document.getElementById("kh-board-count");
       
+      // Get values
+      currentCalculation.employeesCount = parseInt(employeesInput.value) || 0;
+      currentCalculation.contractorsCount = parseInt(contractorsInput.value) || 0;
+      currentCalculation.boardCount = parseInt(boardInput.value) || 0;
+      
+      // Validate that at least one person is selected
+      const totalPeople = currentCalculation.employeesCount + currentCalculation.contractorsCount + currentCalculation.boardCount;
+      if (totalPeople === 0) {
+        ValidationUtils.showError(employeesInput, "Proszę wskazać liczbę osób do rozliczenia (przynajmniej 1 osoba).");
+        validationPassed = false;
+      }
+      
+      // Validate PFRON if there are employees
       if (currentCalculation.employeesCount > 0) {
-        const hasPfron = document.querySelector('input[name="kh-has-pfron"]:checked')?.value;
-        if (!hasPfron) {
-          alert("Proszę odpowiedzieć na pytanie o PFRON.");
-          return;
+        if (!ValidationUtils.validateRadioGroup("kh-has-pfron", "Proszę odpowiedzieć na pytanie o PFRON.", khKadryPanel)) {
+          validationPassed = false;
+        } else {
+          const hasPfron = document.querySelector('input[name="kh-has-pfron"]:checked')?.value;
+          currentCalculation.hasPfron = hasPfron === "tak";
+          
+          if (currentCalculation.hasPfron) {
+            const pfronInput = document.getElementById("kh-pfron-employees");
+            const pfronCount = parseInt(pfronInput.value) || 0;
+            
+            if (pfronCount === 0) {
+              ValidationUtils.showError(pfronInput, "Proszę wskazać liczbę pracowników objętych PFRON (minimum 1).");
+              validationPassed = false;
+            } else if (pfronCount > currentCalculation.employeesCount) {
+              ValidationUtils.showError(pfronInput, "Liczba pracowników PFRON nie może być większa niż całkowita liczba pracowników.");
+              validationPassed = false;
+            } else {
+              currentCalculation.pfronEmployees = pfronCount;
+            }
+          } else {
+            currentCalculation.pfronEmployees = 0;
+          }
         }
-        currentCalculation.hasPfron = hasPfron === "tak";
-        currentCalculation.pfronEmployees = parseInt(document.getElementById("kh-pfron-employees").value) || 0;
       }
     }
+  } else {
+    currentCalculation.wantsPayroll = false;
+    currentCalculation.employeesCount = 0;
+    currentCalculation.contractorsCount = 0;
+    currentCalculation.boardCount = 0;
+    currentCalculation.hasPfron = false;
+    currentCalculation.pfronEmployees = 0;
+  }
+  
+  if (!validationPassed) {
+    return;
   }
   
   calculateKh();
@@ -672,37 +1054,43 @@ function calculateKh() {
   let proceduresPercentage = 0;
 
   // Estonian CIT - 20%
-  if (document.querySelector('input[name="kh-estonian-cit"]:checked').value === "tak") {
+  const estonianCitSelected = document.querySelector('input[name="kh-estonian-cit"]:checked');
+  if (estonianCitSelected && estonianCitSelected.value === "tak") {
     proceduresPercentage += 20;
     includedBurdens.push("Estoński CIT (+20%)");
   }
 
   // VAT Proportion - 10%
-  if (document.querySelector('input[name="kh-vat-proportion"]:checked').value === "tak") {
+  const khVatProportionSelected = document.querySelector('input[name="kh-vat-proportion"]:checked');
+  if (khVatProportionSelected && khVatProportionSelected.value === "tak") {
     proceduresPercentage += 10;
     includedBurdens.push("Proporcja VAT (+10%)");
   }
 
   // VAT OSS - 10%
-  if (document.querySelector('input[name="kh-vat-oss"]:checked').value === "tak") {
+  const khVatOssSelected = document.querySelector('input[name="kh-vat-oss"]:checked');
+  if (khVatOssSelected && khVatOssSelected.value === "tak") {
     proceduresPercentage += 10;
     includedBurdens.push("VAT OSS (+10%)");
   }
 
   // VAT Margin - 20%
-  if (document.querySelector('input[name="kh-vat-margin"]:checked').value === "tak") {
+  const khVatMarginSelected = document.querySelector('input[name="kh-vat-margin"]:checked');
+  if (khVatMarginSelected && khVatMarginSelected.value === "tak") {
     proceduresPercentage += 20;
     includedBurdens.push("VAT marża (+20%)");
   }
 
-  // MT940 - 20% if NO
-  if (document.querySelector('input[name="kh-mt940"]:checked').value === "nie") {
+  // MT940 - 20% if NO (only if selected)
+  const mt940Selected = document.querySelector('input[name="kh-mt940"]:checked');
+  if (mt940Selected && mt940Selected.value === "nie") {
     proceduresPercentage += 20;
     includedBurdens.push("Brak MT940 (+20%)");
   }
 
-  // JPK_FA - 20% if NO
-  if (document.querySelector('input[name="kh-jpk-fa"]:checked').value === "nie") {
+  // JPK_FA - 20% if NO (only if selected)
+  const khJpkFaSelected = document.querySelector('input[name="kh-jpk-fa"]:checked');
+  if (khJpkFaSelected && khJpkFaSelected.value === "nie") {
     proceduresPercentage += 20;
     includedBurdens.push("Brak JPK_FA (+20%)");
   }
