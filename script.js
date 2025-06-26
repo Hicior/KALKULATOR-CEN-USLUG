@@ -1236,7 +1236,7 @@ function showResults() {
     }
     
     if (currentCalculation.boardCount > 0) {
-      payrollDescription.push(`Członkowie zarządu (${currentCalculation.boardCount} × 120 zł)`);
+      payrollDescription.push(`Członkowie zarządu (${currentCalculation.boardCount} × 80 zł)`);
     }
     
     if (payrollDescription.length > 0) {
