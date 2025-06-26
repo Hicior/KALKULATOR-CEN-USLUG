@@ -710,16 +710,21 @@ function calculatePayrollPrice() {
   
   let payrollPrice = 0;
   
-  // Employee pricing: 120 zł per employee
-  payrollPrice += currentCalculation.employeesCount * 120;
+  // Employee pricing calculation
+  const regularEmployees = currentCalculation.employeesCount - currentCalculation.pfronEmployees;
+  const pfronEmployees = currentCalculation.pfronEmployees;
+  
+  // Regular employees: 120 zł per employee
+  payrollPrice += regularEmployees * 120;
+  
+  // PFRON employees: 200 zł per employee
+  payrollPrice += pfronEmployees * 200;
   
   // Contractor pricing: 80 zł per contractor
   payrollPrice += currentCalculation.contractorsCount * 80;
   
-  // Board member pricing: 120 zł per board member
+  // Board member pricing: 80 zł per board member
   payrollPrice += currentCalculation.boardCount * 80;
-  
-  // PFRON employees are still counted at full price (no discount)
   
   currentCalculation.payrollPrice = payrollPrice;
 }
@@ -1228,7 +1233,16 @@ function showResults() {
     let payrollDescription = [];
     
     if (currentCalculation.employeesCount > 0) {
-      payrollDescription.push(`Pracownicy (${currentCalculation.employeesCount} × 120 zł)`);
+      const regularEmployees = currentCalculation.employeesCount - currentCalculation.pfronEmployees;
+      const pfronEmployees = currentCalculation.pfronEmployees;
+      
+      if (regularEmployees > 0) {
+        payrollDescription.push(`Pracownicy (${regularEmployees} × 120 zł)`);
+      }
+      
+      if (pfronEmployees > 0) {
+        payrollDescription.push(`Pracownicy PFRON (${pfronEmployees} × 200 zł)`);
+      }
     }
     
     if (currentCalculation.contractorsCount > 0) {
