@@ -52,6 +52,24 @@ const khSpecialPriceTable = {
   "451-500": 15755.0,
 };
 
+// Special pricing for Fundacja
+const khFundacjaPriceTable = {
+  "0-20": 1380.0,
+  "21-40": 1720.0,
+  "41-60": 2070.0,
+  "61-80": 2300.0,
+  "81-100": 2530.0,
+  "101-120": 2730.0,
+  "121-150": 2830.0,
+  "150-200": 3030.0,
+  "201-250": 3530.0,
+  "251-300": 4030.0,
+  "301-350": 4530.0,
+  "351-400": 5030.0,
+  "401-450": 5530.0,
+  "451-500": 6030.0,
+};
+
 // DOM elements
 const mainPanel = document.getElementById("main-panel");
 const resultPanel = document.getElementById("result-panel");
@@ -1009,11 +1027,13 @@ function validateAndCalculateKh() {
 function calculateKh() {
   currentCalculation.extras = [];
   
-  // Use special pricing for Spółka akcyjna and Prosta spółka akcyjna
+  // Use special pricing for different business forms
   let basePrice;
   if (currentCalculation.businessForm === "spolka-akcyjna" || 
       currentCalculation.businessForm === "prosta-spolka-akcyjna") {
     basePrice = khSpecialPriceTable[currentCalculation.docs];
+  } else if (currentCalculation.businessForm === "fundacja") {
+    basePrice = khFundacjaPriceTable[currentCalculation.docs];
   } else {
     basePrice = khPriceTable[currentCalculation.docs];
   }
