@@ -282,6 +282,9 @@ function setupEventListeners() {
 
   // Calculate Again button
   document.getElementById("calculate-again").addEventListener("click", () => resetAndGoHome());
+  
+  // Download PDF button
+  document.getElementById("download-pdf").addEventListener("click", () => generatePDF());
 
   // Partner input visibility for KPIR
   document.querySelectorAll('input[name="kpir-business-form"]').forEach(radio => {
@@ -1298,4 +1301,292 @@ function showResults() {
 
   // Show result panel
   showPanel(resultPanel);
+}
+
+function generatePDF() {
+  // Get jsPDF from the global window object
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  // Define colors and styling
+  const primaryColor = [88, 134, 199]; // Converted from OKLCH primary color
+  const secondaryColor = [102, 102, 102];
+  const accentColor = [79, 172, 154];
+  
+  let yPosition = 30;
+  const leftMargin = 20;
+  const rightMargin = 190;
+  const lineHeight = 8;
+  const sectionSpacing = 15;
+  
+  // Helper function to handle Polish characters - using reliable ASCII conversion
+  function encodePolishText(text) {
+    // Convert Polish characters to their ASCII equivalents for reliable PDF rendering
+    const polishChars = {
+      'ą': 'a', 'Ą': 'A',
+      'ć': 'c', 'Ć': 'C',
+      'ę': 'e', 'Ę': 'E',
+      'ł': 'l', 'Ł': 'L',
+      'ń': 'n', 'Ń': 'N',
+      'ó': 'o', 'Ó': 'O',
+      'ś': 's', 'Ś': 'S',
+      'ź': 'z', 'Ź': 'Z',
+      'ż': 'z', 'Ż': 'Z'
+    };
+    
+    // Replace all Polish characters with ASCII equivalents
+    return text.replace(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, match => polishChars[match] || match);
+  }
+  
+  // Helper function to add text with proper formatting
+  function addText(text, x, y, options = {}) {
+    const {
+      fontSize = 10,
+      fontStyle = 'normal',
+      align = 'left',
+      color = [0, 0, 0],
+      maxWidth = null,
+      lineHeight: customLineHeight = lineHeight
+    } = options;
+    
+    // Encode Polish characters for proper PDF rendering
+    const encodedText = encodePolishText(text);
+    
+    doc.setFontSize(fontSize);
+    doc.setFont('helvetica', fontStyle);
+    doc.setTextColor(...color);
+    
+    if (maxWidth) {
+      const lines = doc.splitTextToSize(encodedText, maxWidth);
+      lines.forEach((line, index) => {
+        doc.text(line, x, y + (index * customLineHeight), { align });
+      });
+      return lines.length * customLineHeight;
+    } else {
+      doc.text(encodedText, x, y, { align });
+      return customLineHeight;
+    }
+  }
+  
+  // Helper function to add a horizontal line
+  function addHorizontalLine(y, color = [200, 200, 200]) {
+    doc.setDrawColor(...color);
+    doc.setLineWidth(0.5);
+    doc.line(leftMargin, y, rightMargin, y);
+  }
+  
+  // Header - compact start
+  yPosition = 20;
+  
+  // Calculation Details Section
+  addText('SZCZEGÓŁY KALKULACJI', leftMargin, yPosition, {
+    fontSize: 14,
+    fontStyle: 'bold',
+    color: primaryColor
+  });
+  yPosition += 10;
+  
+  // Basic information
+  const businessFormDisplay = getBusinessFormDisplayName(currentCalculation.businessForm);
+  
+  // Helper function to get text width
+  function getTextWidth(text, fontSize = 10, fontStyle = 'normal') {
+    doc.setFontSize(fontSize);
+    doc.setFont('helvetica', fontStyle);
+    return doc.getTextWidth(encodePolishText(text));
+  }
+  
+  // Rodzaj księgowości
+  const typeLabel = 'Rodzaj księgowości: ';
+  addText(typeLabel, leftMargin, yPosition, { fontStyle: 'bold' });
+  const typeLabelWidth = getTextWidth(typeLabel, 10, 'bold');
+  addText(currentCalculation.type, leftMargin + typeLabelWidth, yPosition);
+  yPosition += lineHeight;
+  
+  // Forma działalności
+  const formLabel = 'Forma działalności: ';
+  addText(formLabel, leftMargin, yPosition, { fontStyle: 'bold' });
+  const formLabelWidth = getTextWidth(formLabel, 10, 'bold');
+  const formHeight = addText(businessFormDisplay, leftMargin + formLabelWidth, yPosition, { 
+    maxWidth: rightMargin - leftMargin - formLabelWidth 
+  });
+  yPosition += Math.max(lineHeight, formHeight);
+  
+  // Liczba dokumentów
+  const docsLabel = 'Liczba dokumentów: ';
+  addText(docsLabel, leftMargin, yPosition, { fontStyle: 'bold' });
+  const docsLabelWidth = getTextWidth(docsLabel, 10, 'bold');
+  addText(currentCalculation.docs + ' miesięcznie', leftMargin + docsLabelWidth, yPosition);
+  yPosition += lineHeight;
+  
+  if (currentCalculation.partnersCount > 1) {
+    const partnersLabel = 'Liczba wspólników: ';
+    addText(partnersLabel, leftMargin, yPosition, { fontStyle: 'bold' });
+    const partnersLabelWidth = getTextWidth(partnersLabel, 10, 'bold');
+    addText(currentCalculation.partnersCount.toString(), leftMargin + partnersLabelWidth, yPosition);
+    yPosition += lineHeight;
+  }
+  
+  yPosition += 10;
+  
+  // Services and Pricing Section
+  addText('USŁUGI KSIĘGOWE', leftMargin, yPosition, {
+    fontSize: 14,
+    fontStyle: 'bold',
+    color: primaryColor
+  });
+  yPosition += 10;
+  
+  // Base price
+  addText('Cena podstawowa:', leftMargin, yPosition, { fontStyle: 'bold' });
+  addText(currentCalculation.basePrice.toFixed(2) + ' zł', rightMargin - 30, yPosition, { align: 'right' });
+  yPosition += lineHeight;
+  
+  // Additional procedures
+  if (currentCalculation.extras.length > 0) {
+    yPosition += 5;
+    addText('Procedury szczególne:', leftMargin, yPosition, { 
+      fontStyle: 'bold',
+      color: accentColor
+    });
+    yPosition += lineHeight;
+    
+    currentCalculation.extras.forEach(extra => {
+      const extraPrice = parseFloat(extra.price.replace(' zł', ''));
+      addText('• ' + extra.name, leftMargin + 10, yPosition, { fontSize: 9 });
+      addText(extra.price, rightMargin - 30, yPosition, { align: 'right', fontSize: 9 });
+      yPosition += lineHeight;
+      
+      if (extra.details) {
+        const detailHeight = addText(extra.details, leftMargin + 15, yPosition, { 
+          fontSize: 8, 
+          color: secondaryColor,
+          maxWidth: rightMargin - leftMargin - 45,
+          lineHeight: 6  // Smaller line height for details
+        });
+        yPosition += Math.max(6, detailHeight);
+      }
+    });
+  }
+  
+  // Calculate accounting total
+  const accountingTotal = currentCalculation.basePrice + (currentCalculation.extras.reduce((sum, extra) => {
+    return sum + parseFloat(extra.price.replace(' zł', ''));
+  }, 0));
+  
+  yPosition += 5;
+  addHorizontalLine(yPosition, [150, 150, 150]);
+  yPosition += 8;
+  
+  addText('Suma usług księgowych:', leftMargin, yPosition, { 
+    fontStyle: 'bold',
+    fontSize: 11
+  });
+  addText(accountingTotal.toFixed(2) + ' zł', rightMargin - 30, yPosition, { 
+    align: 'right',
+    fontStyle: 'bold',
+    fontSize: 11
+  });
+  yPosition += 10;
+  
+  // Payroll Services Section (if applicable)
+  if (currentCalculation.wantsPayroll && currentCalculation.payrollPrice > 0) {
+    yPosition += 10; // Add top margin for separation
+    
+    addText('USŁUGI KADROWO-PŁACOWE', leftMargin, yPosition, {
+      fontSize: 14,
+      fontStyle: 'bold',
+      color: primaryColor
+    });
+    yPosition += 10;
+    
+    // Payroll details
+    if (currentCalculation.employeesCount > 0) {
+      const regularEmployees = currentCalculation.employeesCount - currentCalculation.pfronEmployees;
+      const pfronEmployees = currentCalculation.pfronEmployees;
+      
+      if (regularEmployees > 0) {
+        addText(`Pracownicy (${regularEmployees} × 120 zł):`, leftMargin, yPosition);
+        addText((regularEmployees * 120).toFixed(2) + ' zł', rightMargin - 30, yPosition, { align: 'right' });
+        yPosition += lineHeight;
+      }
+      
+      if (pfronEmployees > 0) {
+        addText(`Pracownicy PFRON (${pfronEmployees} × 200 zł):`, leftMargin, yPosition);
+        addText((pfronEmployees * 200).toFixed(2) + ' zł', rightMargin - 30, yPosition, { align: 'right' });
+        yPosition += lineHeight;
+      }
+    }
+    
+    if (currentCalculation.contractorsCount > 0) {
+      addText(`Zleceniobiorcy (${currentCalculation.contractorsCount} × 80 zł):`, leftMargin, yPosition);
+      addText((currentCalculation.contractorsCount * 80).toFixed(2) + ' zł', rightMargin - 30, yPosition, { align: 'right' });
+      yPosition += lineHeight;
+    }
+    
+    if (currentCalculation.boardCount > 0) {
+      addText(`Członkowie zarządu (${currentCalculation.boardCount} × 80 zł):`, leftMargin, yPosition);
+      addText((currentCalculation.boardCount * 80).toFixed(2) + ' zł', rightMargin - 30, yPosition, { align: 'right' });
+      yPosition += lineHeight;
+    }
+    
+    yPosition += 5;
+    addHorizontalLine(yPosition, [150, 150, 150]);
+    yPosition += 8;
+    
+    addText('Suma usług kadrowo-płacowych:', leftMargin, yPosition, { 
+      fontStyle: 'bold',
+      fontSize: 11
+    });
+    addText(currentCalculation.payrollPrice.toFixed(2) + ' zł', rightMargin - 30, yPosition, { 
+      align: 'right',
+      fontStyle: 'bold',
+      fontSize: 11
+    });
+    yPosition += 10;
+  }
+  
+  // Final Total
+  yPosition += 15; // More space before final total
+  addHorizontalLine(yPosition, primaryColor);
+  yPosition += 8;
+  
+  addText('CENA KOŃCOWA:', leftMargin, yPosition, {
+    fontSize: 16,
+    fontStyle: 'bold',
+    color: primaryColor
+  });
+  addText(currentCalculation.finalPrice.toFixed(2) + ' zł', rightMargin - 30, yPosition, {
+    align: 'right',
+    fontSize: 16,
+    fontStyle: 'bold',
+    color: primaryColor
+  });
+  
+  // Footer at bottom of page
+  const footerY = 280; // Fixed position at bottom
+  addHorizontalLine(footerY, [200, 200, 200]);
+  
+  const currentDate = new Date().toLocaleDateString('pl-PL');
+  addText(`Wycena wygenerowana: ${currentDate}`, leftMargin, footerY + 5, {
+    fontSize: 8,
+    color: secondaryColor
+  });
+  
+  // Generate filename (avoiding Polish characters in filename)
+  const dateStr = new Date().toISOString().split('T')[0];
+  let typeStr = currentCalculation.type;
+  // Replace Polish characters for filename compatibility
+  typeStr = typeStr.replace(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, match => {
+    const replacements = {
+      'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
+      'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 'Ó': 'O', 'Ś': 'S', 'Ź': 'Z', 'Ż': 'Z'
+    };
+    return replacements[match] || match;
+  });
+  typeStr = typeStr.replace(/[^a-zA-Z0-9]/g, '');
+  const filename = `wycena-${typeStr}-${dateStr}.pdf`;
+  
+  // Save the PDF
+  doc.save(filename);
 }

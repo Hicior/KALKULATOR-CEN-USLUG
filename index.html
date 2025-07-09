@@ -527,11 +527,11 @@
               </div>
               <div class="radio-group horizontal">
                 <label class="radio-option">
-                  <input type="radio" name="kh-mt940" value="nie" id="kh-mt940-nie" />
+                  <input type="radio" name="kh-mt940" value="nie" id="kh-mt940-nie" checked />
                   <span>NIE</span>
                 </label>
                 <label class="radio-option">
-                  <input type="radio" name="kh-mt940" value="tak" id="kh-mt940-tak" checked />
+                  <input type="radio" name="kh-mt940" value="tak" id="kh-mt940-tak" />
                   <span>TAK</span>
                 </label>
               </div>
@@ -724,12 +724,17 @@
           </div>
 
           <div class="button-group">
+            <button id="download-pdf" class="btn btn-secondary">
+              <span class="btn-icon">📄</span>
+              Pobierz PDF
+            </button>
             <button id="calculate-again" class="btn btn-primary">Nowa kalkulacja</button>
           </div>
         </div>
       </main>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

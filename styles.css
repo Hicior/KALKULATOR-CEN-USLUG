@@ -574,9 +574,15 @@ label {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   text-decoration: none;
   font-family: inherit;
   letter-spacing: 0.01em;
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
 .btn-primary {
